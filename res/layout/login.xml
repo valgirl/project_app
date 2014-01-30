@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/Black">
+
+    <Button
+        android:id="@+id/loginbutton_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pass_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:text="@string/login"
+        android:textSize="15sp"
+        android:width="70dp" />
+
+    <TextView
+        android:id="@+id/logg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="32dp"
+        android:paddingLeft="10dp"
+        android:text="@string/username"
+        android:textColor="@color/White"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/Logged_in_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/logg"
+        android:layout_below="@+id/user_login"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="10dp"
+        android:text="@string/pass"
+        android:textColor="@color/White"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/user_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/logg"
+        android:layout_alignBottom="@+id/logg"
+        android:layout_toRightOf="@+id/logg"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:width="200dp" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/pass_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Logged_in_person"
+        android:layout_alignBottom="@+id/Logged_in_person"
+        android:layout_alignLeft="@+id/user_login"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:width="200dp" />
+
+</RelativeLayout>

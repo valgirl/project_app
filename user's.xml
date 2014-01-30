@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Person>
+  <Fname />
+  <LName />
+  <Password />
+  <BeepTest Time="" Distance=""></BeepTest>
+  <JumpTest>
+    <Name TotalTime="" TotalHeight=""></Name>
+  </JumpTest>
+  <SpeedTest>
+    <Name TotalTime="" TotalDistance="" Distance1="" Distance2="" Distance3="" Time1="" Time2="" Time3=""></Name>
+  </SpeedTest>
+</Person>
