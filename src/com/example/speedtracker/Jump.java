@@ -19,6 +19,7 @@ import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 
@@ -77,11 +78,22 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 					Cursor s = dbh.db.rawQuery("select * from Person where username = '"+user+"'",null);
 					log.info("Query is: "+s.toString()+" and user is: "+user);
 					int index = s.getColumnIndexOrThrow("jump");
-					String jp = s.getString(index);
+					log.info("Count of rows is: "+s.getCount());
+					String jp;
 					StringBuffer sb = new StringBuffer();
-					sb.append(jp);
-					sb.append("%"+Double.toString(distance));
+					s.moveToFirst();
+					if((jp = s.getString(index)) != null){
+						
+						sb.append(jp);
+						String s1 = String.format("%.2f", distance);
+						sb.append("%"+s1);
+						height.setText("");
+						time_display.setText("");
+						log.info("String buffer is: "+sb.toString());
+					}
+				
 					dbh.db.execSQL("update Person set jump = '"+sb+"' where username = '"+user+"'");
+					 Toast.makeText(Jump.this, "Data saved", Toast.LENGTH_SHORT).show();
 				}
 				catch(SQLException e){
 					log.info("Query not executes string invalid "+e.toString() );

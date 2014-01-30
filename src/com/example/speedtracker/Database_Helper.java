@@ -41,6 +41,14 @@ public class Database_Helper {
     	init.put("password", "joe");
     	init.put("fname", "valerie");
     	init.put("coach", "ken moore");
+		init.put("lname", "");
+		init.put("weight", "");
+		init.put("height", "");
+		init.put("age", "");
+		init.put("jump", "");
+		init.put("speedtest", "");
+		init.put("beeptest", "");
+		init.put("run", "");
 		db.insert("Person", null, init);
 		//log.info("Contents added");
 		

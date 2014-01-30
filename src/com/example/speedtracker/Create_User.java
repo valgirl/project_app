@@ -115,6 +115,10 @@ public class Create_User extends Activity  implements  OnItemSelectedListener {
 				init.put("weight", in_weight);
 				init.put("height", in_height);
 				init.put("age", in_age);
+				init.put("jump", "");
+				init.put("speedtest", "");
+				init.put("beeptest", "");
+				init.put("run", "");
 				init.put("coach", coach_name);
 				//check if username already exists
 				Cursor myCursor = dbh.db.rawQuery("select * from Person where username = '"+in_user+"'",null);
