@@ -254,10 +254,15 @@ public class MainActivity extends Activity  {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-@Override
-protected void onDestroy() {
-	// TODO Auto-generated method stub
-	super.onDestroy();
-	//destroy all running hardware/db etc.
-}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		//destroy all running hardware/db etc.
+	}
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+	}
 }

@@ -19,7 +19,7 @@ public class Database_Helper {
 	 
 	 public Database_Helper(String path){
 		openDatabase(path);
-		addContents();
+		//addContents();
 		log = Logger.getLogger("Database Helper");
 		log.info("In database Helper");
 	}

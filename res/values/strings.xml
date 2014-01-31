@@ -27,6 +27,7 @@
   <string name="coach">Coach:</string>
     <string name="add_coach">Add Coach</string>
        <string name="create_user">Create</string>
+              <string name="tot_distance">Total Distance(m):</string>
        <string name="ok">OK</string>
           <string name="coach_name">Coach Name:</string>
 </resources>

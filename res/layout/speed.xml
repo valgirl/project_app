@@ -2,6 +2,100 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="25dp"
+        android:text="@string/username"
+        android:textColor="@color/White"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/fst_name_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView2"
+        android:layout_alignTop="@+id/textView1"
+        android:layout_toRightOf="@+id/textView1"
+        android:background="@color/white"
+        android:textColor="@color/Black"
+        android:textSize="20sp"
+        android:width="120dp" />
+
+    <TextView
+        android:id="@+id/usern_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignLeft="@+id/fst_name_speed"
+        android:layout_alignRight="@+id/fst_name_speed"
+        android:layout_alignTop="@+id/textView2"
+        android:background="@color/White"
+        android:textColor="@color/Black"
+        android:textSize="20sp"
+        android:width="120dp" />
+
+     <TextView
+         android:id="@+id/textView6"
+         android:layout_width="match_parent"
+         android:layout_height="5dp"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/textView2"
+         android:layout_marginTop="36dp"
+         android:background="@color/teal" />
+
+     <TextView
+         android:id="@+id/textView1"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true"
+         android:layout_marginLeft="53dp"
+         android:layout_marginTop="53dp"
+         android:paddingRight="10dp"
+         android:text="@string/fname"
+         android:textColor="@color/white"
+         android:textSize="20sp" />
+
+     <TextView
+         android:id="@+id/textView3"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_centerVertical="true"
+         android:paddingLeft="10dp"
+         android:paddingRight="10dp"
+         android:text="@string/tot_distance"
+         android:textColor="@color/White"
+         android:textSize="20sp" />
+
+     <TextView
+         android:id="@+id/textView4"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBottom="@+id/textView3"
+         android:layout_alignRight="@+id/usern_speed"
+         android:layout_alignTop="@+id/textView3"
+         android:layout_toRightOf="@+id/textView3"
+         android:background="@color/White"
+         android:textColor="@color/Black"
+         android:textSize="20sp" />
+
+     <Button
+         android:id="@+id/button1"
+         style="?android:attr/buttonStyleSmall"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/textView3"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="58dp"
+         android:background="@color/Teal"
+         android:height="30dp"
+         android:text="@string/start"
+         android:width="70dp" />
 
 </RelativeLayout>

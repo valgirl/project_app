@@ -35,7 +35,6 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 	private  SensorEventListener el;
 	private Logger log;
 	private TextView height;
-	private TextView time_display;
 	private float min;
 	private boolean jump_flag=false;
 	private boolean start_flag = false;
@@ -57,7 +56,6 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		min = 0;
 		
 		height = (TextView)findViewById(R.id.height_total);
-		time_display = (TextView)findViewById(R.id.time_total);
 		Intent get_values= getIntent();
 		Bundle myBundle = get_values.getExtras();
 		fname = myBundle.getString("name");
@@ -88,7 +86,6 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 						String s1 = String.format("%.2f", distance);
 						sb.append("%"+s1);
 						height.setText("");
-						time_display.setText("");
 						log.info("String buffer is: "+sb.toString());
 					}
 				
@@ -112,7 +109,6 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 				// TODO Auto-generated method stub
 				//start accelerrometer
 				height.setText("");
-				time_display.setText("");
 				String s = "3, 2, 1, Go!";
 			    speak(s);
 				
@@ -141,7 +137,6 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		distance = distance * 100;
 		float time_2 = (float)time;
 		height.setText(String.format("%.2f", distance));
-		time_display.setText(String.format("%.2f", time_2));
 		time = 0;
 		min = 0;
 		start_flag = false;
