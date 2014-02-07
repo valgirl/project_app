@@ -74,7 +74,7 @@
          android:textSize="20sp" />
 
      <TextView
-         android:id="@+id/textView4"
+         android:id="@+id/total_dist_speed"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignBottom="@+id/textView3"
@@ -86,7 +86,7 @@
          android:textSize="20sp" />
 
      <Button
-         android:id="@+id/button1"
+         android:id="@+id/start_speed"
          style="?android:attr/buttonStyleSmall"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"

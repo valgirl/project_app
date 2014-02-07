@@ -379,11 +379,10 @@ containing a value of this type.
     }
     public static final class id {
         public static final int Logged_in_person=0x7f050013;
-        public static final int action_settings=0x7f050030;
+        public static final int action_settings=0x7f050031;
         public static final int add_coach_ok_btn=0x7f050007;
         public static final int age=0x7f050022;
         public static final int beep=0x7f050018;
-        public static final int button1=0x7f05002f;
         public static final int coach_add=0x7f050029;
         public static final int coach_name=0x7f050006;
         public static final int coach_spinner=0x7f050028;
@@ -402,6 +401,7 @@ containing a value of this type.
         public static final int login=0x7f050016;
         public static final int loginbutton_login=0x7f050011;
         public static final int logout=0x7f05001b;
+        public static final int map=0x7f05002b;
         public static final int myTitle=0x7f05001c;
         public static final int new_user_login=0x7f05002a;
         public static final int none=0x7f050000;
@@ -413,14 +413,15 @@ containing a value of this type.
         public static final int save_jump=0x7f050010;
         public static final int speed=0x7f050017;
         public static final int start_jump=0x7f05000b;
+        public static final int start_speed=0x7f050030;
         public static final int terrain=0x7f050003;
-        public static final int textView1=0x7f05002c;
-        public static final int textView2=0x7f05002b;
-        public static final int textView3=0x7f05002d;
-        public static final int textView4=0x7f05002e;
+        public static final int textView1=0x7f05002d;
+        public static final int textView2=0x7f05002c;
+        public static final int textView3=0x7f05002e;
         public static final int textView5=0x7f05000f;
         public static final int textView6=0x7f05000c;
         public static final int textView7=0x7f050023;
+        public static final int total_dist_speed=0x7f05002f;
         public static final int us_name_jump=0x7f05000d;
         public static final int user_Name=0x7f050020;
         public static final int user_login=0x7f050014;

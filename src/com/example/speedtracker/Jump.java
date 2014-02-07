@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
 public class Jump extends Activity implements SensorEventListener, TextToSpeech.OnInitListener{
 
 	private TextToSpeech tts;
@@ -31,8 +30,7 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 	private String user;
 	private SensorManager mgr;
 	private Sensor accel;
-	private float MAX=0;
-	private  SensorEventListener el;
+	private  SensorEventListener event_listener;
 	private Logger log;
 	private TextView height;
 	private float min;
@@ -51,7 +49,7 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		tts = new TextToSpeech(this, this);
 		mgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 	       accel = mgr.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-	       el = this;
+	       event_listener = this;
 		dbh = Database_Helper.getInstance();
 		min = 0;
 		
@@ -112,7 +110,7 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 				String s = "3, 2, 1, Go!";
 			    speak(s);
 				
-				mgr.registerListener(el, accel, SensorManager.SENSOR_DELAY_NORMAL);
+				mgr.registerListener(event_listener, accel, SensorManager.SENSOR_DELAY_NORMAL);
 			}
 		});
 	}
@@ -135,7 +133,6 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		distance =  0.5 * (min * (time1 * time1));
 		log.info("Distance "+distance);
 		distance = distance * 100;
-		float time_2 = (float)time;
 		height.setText(String.format("%.2f", distance));
 		time = 0;
 		min = 0;
