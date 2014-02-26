@@ -46,8 +46,6 @@ public class Speed extends Activity implements  SensorEventListener, TextToSpeec
 		});
 	}
 
-	
-	
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub

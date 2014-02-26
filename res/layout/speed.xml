@@ -7,8 +7,8 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
+        android:layout_alignLeft="@+id/txt1"
+        android:layout_below="@+id/txt1"
         android:layout_marginTop="25dp"
         android:text="@string/username"
         android:textColor="@color/White"
@@ -19,8 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView2"
-        android:layout_alignTop="@+id/textView1"
-        android:layout_toRightOf="@+id/textView1"
+        android:layout_alignTop="@+id/txt1"
+        android:layout_toRightOf="@+id/txt1"
         android:background="@color/white"
         android:textColor="@color/Black"
         android:textSize="20sp"
@@ -49,7 +49,7 @@
          android:background="@color/teal" />
 
      <TextView
-         android:id="@+id/textView1"
+         android:id="@+id/txt1"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignParentLeft="true"
@@ -62,7 +62,7 @@
          android:textSize="20sp" />
 
      <TextView
-         android:id="@+id/textView3"
+         android:id="@+id/attempt_view"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignParentLeft="true"
@@ -77,10 +77,10 @@
          android:id="@+id/total_dist_speed"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_alignBottom="@+id/textView3"
+         android:layout_alignBottom="@+id/attempt_view"
          android:layout_alignRight="@+id/usern_speed"
-         android:layout_alignTop="@+id/textView3"
-         android:layout_toRightOf="@+id/textView3"
+         android:layout_alignTop="@+id/attempt_view"
+         android:layout_toRightOf="@+id/attempt_view"
          android:background="@color/White"
          android:textColor="@color/Black"
          android:textSize="20sp" />
@@ -90,7 +90,7 @@
          style="?android:attr/buttonStyleSmall"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_below="@+id/textView3"
+         android:layout_below="@+id/attempt_view"
          android:layout_centerHorizontal="true"
          android:layout_marginTop="58dp"
          android:background="@color/Teal"

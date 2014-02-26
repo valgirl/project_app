@@ -5,65 +5,17 @@
     android:background="@color/Black" >
 
     <TextView
-        android:id="@+id/fname_prompt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="48dp"
-        android:paddingRight="10dp"
-        android:text="@string/fname"
-        android:textColor="@color/White"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/user_speed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/fname_prompt"
-        android:layout_below="@+id/fname_prompt"
-        android:layout_marginTop="20dp"
-        android:paddingRight="10dp"
-        android:text="@string/username"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
-
-    <TextView
         android:id="@+id/fname_jump"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/fname_prompt"
         android:layout_alignTop="@+id/fname_prompt"
-        android:layout_toRightOf="@+id/fname_prompt"
+        android:layout_toRightOf="@+id/user_speed"
         android:background="@color/white"
         android:paddingLeft="10dp"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:width="120dp" />
-
-    <Button
-        android:id="@+id/start_jump"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_speed"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp"
-        android:background="@color/DarkCyan"
-        android:height="30dp"
-        android:text="@string/start"
-        android:textSize="20sp"
-        android:width="70dp" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/start_jump"
-        android:layout_marginTop="19dp"
-        android:background="@color/teal" />
 
     <TextView
         android:id="@+id/us_name_jump"
@@ -86,33 +38,144 @@
         android:layout_alignRight="@+id/us_name_jump"
         android:layout_alignTop="@+id/textView5"
         android:background="@color/White"
+        android:paddingLeft="20dp"
         android:textColor="@color/black"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:height="65dp"
+        android:paddingLeft="10dp"
+        android:text="@string/jump_instructions"
+        android:textColor="@color/CornflowerBlue"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/save_jump"
         android:layout_alignRight="@+id/user_speed"
-        android:layout_below="@+id/textView6"
-        android:layout_marginTop="67dp"
+        android:layout_marginBottom="55dp"
         android:paddingRight="20dp"
         android:text="@string/height"
         android:textColor="@color/white"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView5"
+        android:layout_alignLeft="@+id/textView5"
+        android:layout_alignRight="@+id/textView5"
+        android:layout_marginBottom="19dp"
+        android:paddingLeft="27dp"
+        android:text="@string/att"
+        android:textColor="@color/White"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/attempt_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignRight="@+id/height_total"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_toRightOf="@+id/textView2"
+        android:background="@color/White"
+        android:paddingLeft="20dp"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_above="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="34dp"
+        android:background="@color/teal" />
+
+    <TextView
+        android:id="@+id/fname_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/us_name_jump"
+        android:layout_alignRight="@+id/start_jump"
+        android:layout_marginBottom="25dp"
+        android:layout_marginRight="21dp"
+        android:paddingRight="10dp"
+        android:text="@string/fname"
+        android:textColor="@color/White"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/start_jump"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView6"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="22dp"
+        android:background="@color/DarkCyan"
+        android:height="30dp"
+        android:text="@string/start"
+        android:textSize="20sp"
+        android:width="70dp" />
+
+    <TextView
+        android:id="@+id/user_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/start_jump"
+        android:layout_alignLeft="@+id/fname_prompt"
+        android:layout_marginBottom="22dp"
+        android:paddingRight="10dp"
+        android:text="@string/username"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/save_jump"
+        android:layout_alignLeft="@+id/textView5"
+        android:layout_alignRight="@+id/textView5"
+        android:layout_marginBottom="14dp"
+        android:paddingLeft="5dp"
+        android:text="@string/best"
+        android:textColor="@color/White"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/best_jp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignLeft="@+id/height_total"
+        android:layout_alignRight="@+id/height_total"
+        android:layout_alignTop="@+id/textView3"
+        android:background="@color/White" />
 
     <Button
         android:id="@+id/save_jump"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/start_jump"
-        android:layout_alignRight="@+id/start_jump"
-        android:layout_below="@+id/textView5"
-        android:layout_marginTop="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="31dp"
         android:background="@color/DarkCyan"
         android:height="30dp"
         android:text="@string/save"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:width="70dp" />
 
 </RelativeLayout>

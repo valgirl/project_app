@@ -1,33 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	
+     			  <!--  main strings-->
+    
     <string name="app_name">SportsTracker</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="profile">Profile</string>
-    <string name="speed">Speed Test</string>
-    <string name="record">Record</string>
-    <string name="log">History Log</string>
-    <string name="login">Login</string>
-    <string name="jump">Vertical Jump</string>
-    <string name="beep">Beep Test</string>
+	<string name="action_settings">Settings</string>
+	<string name="profile">Profile</string>
+	<string name="speed">Speed Test</string>
+	<string name="record">Record</string>
+	<string name="login">Login</string>
+	<string name="jump">Vertical Jump</string>
+	<string name="beep">Beep Test</string>
+	<string name="create_user">Create</string>
+	<string name="logout">Logout</string>
+	<string name="sync">Sync</string>
+		
+      
+     		  <!--  createpage strings -->   
+       
     <string name="fname">First Name:</string>
-    <string name="lname">Last Name:</string>
-      <string name="age">Age:</string>
-        <string name="weight">Weight(kg):</string>
-    <string name="pass">Password:</string>
-    <string name="enter">Enter</string>
-    <string name="start">Start</string>
-        <string name="height">Height(cm):</string>
-    <string name="time">Time(ms):</string>
-     <string name="save">Save</string>
-     <string name="logout">Logout</string>
-      <string name="username">UserName:</string>
- <string name="create">Create Account/Add Coach</string>
-  <string name="coach">Coach:</string>
-    <string name="add_coach">Add Coach</string>
-       <string name="create_user">Create</string>
-              <string name="tot_distance">Total Distance(m):</string>
-       <string name="ok">OK</string>
-          <string name="coach_name">Coach Name:</string>
+	<string name="lname">Last Name:</string>
+    <string name="age">Age:</string>
+    <string name="weight">Weight(kg):</string>
+	<string name="pass">Password:</string>
+	<string name="enter">Enter</string>
+	<string name="save">Save</string>
+	<string name="username">UserName:</string>
+	<string name="create">Create Account/Add Coach</string>
+	<string name="coach">Coach:</string>
+	<string name="add_coach">Add Coach</string>
+	<string name="ok">OK</string>
+	<string name="coach_name">Coach Name:</string>
+	
+				
+				<!--  jump strings -->
+				
+	<string name="att">Attempt:</string>
+	<string name="start">Start</string>
+	<string name="height">Height(cm):</string>
+	<string name="time">Time(ms):</string>
+	<string name="jump_instructions">Press start and jump as high as you can. The best of three
+    attempts is recorded.</string>
+   <string name="best">Best Jump: </string>
+      
+            
+            		<!--  speed strings -->
+            
+    <string name="tot_distance">Total Distance(m):</string>
+    
+     			 <!--  run strings -->
+     			 
+        	<string name="rec">Record</string>
+        	
+        		  <!--  beep strings -->
+    
+   
+                <!--  help documents -->
+                
+                	<!--  title strings-->
+                	
+       	<string name="run_test"><![CDATA[<b><u>Run</u></b>]]></string>
+       	<string name="beep_test"><![CDATA[<b><u>Beep Test</u></b>]]></string>
+       	<string name="sprint_test"><![CDATA[<b><u>150s Test</u></b>]]></string>
+       	<string name="power_test"><![CDATA[<b><u>Power Test</u></b>]]></string>
+                	 	
+					<!--  main -->
+	<string name="help_main">Welcome to sportstracker. This app is designed to help you monitor your progress after each training session.
+	    Please log onto <![CDATA[<b><u>www.sportstracker.com</u></b>]]> to view all your results. <![CDATA[<br>]]>  For information on each test please navigate through the pages.\n  
+	    <![CDATA[<br>]]>Enjoy your training! </string>
+	 
+	<string name="help">Help</string>
+	                      
+          <string name="jump_help">Vertical jumps are used to both train and test for power output in athletes. 
+            This test will ask you to perform three jumps. First you must attach the mobile
+             to just above your ankle. (An armband is a good way) Press start and the test will begin. When
+              3 jumps are done you will be able to save you best jump.</string>
+              
+          <string name="run_help">Press start to start recording. When you are finished press save
+              and your route will be saved to the database</string>
+                      
+          <string name="speed_help">Layout a 25 metre lane with a cone at 5 metre intervals. When you are prompted run to the first cone, back to the start,
+                      run to the second cone, back to the start and so on until the timer sounds. If each interval is completed they will have run a total distance of 150 metres.
+                       The goal is to complete all intervals in 30 seconds.</string>
+         
+          <string name="beep_help">Layout a 20 metre lane. Press the start button. A beep will sound indicating to start.
+               You must reach the line on either end before the next beep 
+              sounds. The beeps will get shorter and shorter as the test proceeds.</string>
+                      
+          <string name="sync_help">To upload all your information to the website you must press the sync button.
+              This will upload all your results to the website.</string>
 </resources>

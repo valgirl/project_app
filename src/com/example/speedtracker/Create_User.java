@@ -55,7 +55,8 @@ public class Create_User extends Activity  implements  OnItemSelectedListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_user);
 		setResult(Activity.RESULT_CANCELED);
-		coach_db = new Database_Helper("coaches.db");
+		coach_name="";
+		coach_db = new Database_Helper("coaches.db", getApplicationContext());
 		Cursor myCursor = coach_db.db.rawQuery("select * from Coach",null);
 		coaches = new ArrayList<String>();
 		if(myCursor.getCount() > 0)
@@ -106,35 +107,49 @@ public class Create_User extends Activity  implements  OnItemSelectedListener {
 				in_height = height.getText().toString().trim();
 				in_age = age.getText().toString().trim();
 				log.info("in log button " +in_fname);
+				
+				if(in_fname.isEmpty()) {
+					 Toast.makeText(Create_User.this, "You must enter a first name!", Toast.LENGTH_LONG).show();
+				}
 				//put values entered into a content
-				ContentValues init = new ContentValues();
-				init.put("fname", in_fname);
-				init.put("lname", in_lname);
-				init.put("username", in_user);
-				init.put("password", in_pass);
-				init.put("weight", in_weight);
-				init.put("height", in_height);
-				init.put("age", in_age);
-				init.put("jump", "");
-				init.put("speedtest", "");
-				init.put("beeptest", "");
-				init.put("run", "");
-				init.put("coach", coach_name);
-				//check if username already exists
-				Cursor myCursor = dbh.db.rawQuery("select * from Person where username = '"+in_user+"'",null);
-			    if(myCursor.getCount() > 0){
-			    	 setResult(Activity.RESULT_FIRST_USER, get);
-			    	 finish();
+				else {
+					ContentValues init = new ContentValues();		
+					if(in_fname.isEmpty()) in_fname = "";
+					if(in_lname.isEmpty()) in_lname = "";
+					if(in_user.isEmpty()) in_user = "";
+					if(in_pass.isEmpty()) in_pass = "";
+					if(in_weight.isEmpty()) in_weight = "";
+					if(in_height.isEmpty()) in_height = "";
+					if(in_age.isEmpty()) in_age= "";
+					if(coach_name.isEmpty()) coach_name = "";
+					init.put("fname", in_fname);
+					init.put("lname", in_lname);
+					init.put("username", in_user);
+					init.put("password", in_pass);
+					init.put("weight", in_weight);
+					init.put("height", in_height);
+					init.put("age", in_age);
+					init.put("jump", "");
+					init.put("speed", "");
+					init.put("beep", "");
+					init.put("run", "");
+					init.put("coach", coach_name);
+					//check if username already exists
+					Cursor myCursor = dbh.db.rawQuery("select * from Person where username = '"+in_user+"'",null);
+				    if(myCursor.getCount() > 0){
+				    	 setResult(Activity.RESULT_FIRST_USER, get);
+				    	 finish();
+				    }
+				    else{//insert person into dataase
+						dbh.db.insert("Person", null, init);
+					    Bundle receive = new  Bundle();
+						receive.putString("name", in_fname);
+						receive.putString("user", in_user);
+					    get.putExtras(receive);
+					    setResult(Activity.RESULT_OK,get);
+					    finish();
 			    }
-			    else{//insert person into dataase
-					dbh.db.insert("Person", null, init);
-				    Bundle receive = new  Bundle();
-					receive.putString("name", in_fname);
-					receive.putString("user", in_user);
-				    get.putExtras(receive);
-				    setResult(Activity.RESULT_OK,get);
-				    finish();
-		    }
+				}
 			}
 		});
 			

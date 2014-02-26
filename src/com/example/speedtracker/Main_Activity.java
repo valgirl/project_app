@@ -7,7 +7,9 @@ import com.example.speedtracker.R.color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.view.Menu;
@@ -27,14 +29,20 @@ public class Main_Activity extends Activity  {
 	private Button login;
 	private Button logout;
 	private Button create;
+	private Button sync;
+	private ProgressDialog progress;
+	private Button help;
 	String userName="";
 	private String passWord;
 	private Cursor myCursor;
 	private Database_Helper dbh;
 	private Logger log;
-	private TextView logged_in;
 	private String storedPassword;
 	String person_name;
+	SharedPreferences myprefs;
+	SharedPreferences.Editor myEditor;
+	final int mode = Activity.MODE_PRIVATE; 
+	final String MYPREFS = "MyPreferences_001"; 
 	
 	
 	@Override
@@ -44,6 +52,9 @@ public class Main_Activity extends Activity  {
 		setContentView(R.layout.main_activity);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,R.layout.mytitle);
 		
+		
+		sync = (Button)findViewById(R.id.syn);
+		help = (Button)findViewById(R.id.hlp);
 		speed = (Button)findViewById(R.id.speed);
 		beep = (Button)findViewById(R.id.beep);
 		jump = (Button)findViewById(R.id.jump);
@@ -51,13 +62,59 @@ public class Main_Activity extends Activity  {
 		login = (Button)findViewById(R.id.login);
 		logout = (Button)findViewById(R.id.logout);
 		create = (Button)findViewById(R.id.create_user);
-		logged_in = (TextView)findViewById(R.id.Logged_in_person);
-		dbh = new Database_Helper("people_speed.db");
+		dbh = new Database_Helper("people_speed.db",getApplicationContext());
 		log = Logger.getLogger("Main");
-		person_name = "";
-		userName="";
+		
 		logout.setClickable(false);
 		logout.setBackgroundColor(color.gray);
+		sync.setClickable(false);
+		sync.setBackgroundColor(color.gray);
+		
+		myprefs = getSharedPreferences(MYPREFS, mode);
+		if (myprefs != null && 
+				myprefs.contains("userN")) { 
+				//object and key found, show all saved values 
+				person_name = myprefs.getString("name", ""); 
+				userName = myprefs.getString("userN", "");
+				if(!person_name.isEmpty()){
+					login.setClickable(false);
+	                login.setBackgroundColor(Color.GRAY);
+	                create.setClickable(false);
+	                create.setBackgroundColor(Color.GRAY);
+	                logout.setClickable(true);
+	                sync.setClickable(true);
+	                sync.setBackgroundColor(getResources().getColor(color.CornflowerBlue));
+	                logout.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
+			}
+		} 
+		else 
+		{ 
+			person_name = "";
+			userName=""; 
+		}
+		help.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent inten = new Intent(Main_Activity.this, Help.class);
+				startActivity(inten);
+			}
+		});
+		sync.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//progress = ProgressDialog.show(getApplicationContext(), "Wait", "Uploading");
+				log.info("username is: "+userName);
+				Intent inten = new Intent(Main_Activity.this, Sync.class);
+				Bundle myBundle = new Bundle();
+				myBundle.putString("username", userName);
+				inten.putExtras(myBundle);
+				startActivityForResult(inten, 321);
+			}
+		});
 		speed.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -108,8 +165,7 @@ public class Main_Activity extends Activity  {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-		
-						
+	
 						userName = editTextUserName.getText().toString().trim();
 						passWord = editTextPassword.getText().toString().trim();
 						
@@ -130,7 +186,9 @@ public class Main_Activity extends Activity  {
 			                        create.setBackgroundColor(Color.GRAY);
 			                        logout.setClickable(true);
 			                        logout.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
-			                        logged_in.setText(person_name+" is logged in");
+			                        sync.setClickable(true);
+			                        sync.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
+			                  
 			                        dialog.dismiss();
 			                    }
 							  else
@@ -149,8 +207,6 @@ public class Main_Activity extends Activity  {
 		                        Toast.makeText(Main_Activity.this, "User Name does not exist", Toast.LENGTH_LONG).show();
 		                        dialog.dismiss();
 		                    }
-						
-						
 					}
 				}
 				);
@@ -174,11 +230,21 @@ public class Main_Activity extends Activity  {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				log.info("in jump");
 				Intent inten = new Intent(Main_Activity.this, Run.class);
-				
-				startActivity(inten);
+				if(person_name.isEmpty()){
+					Toast.makeText(Main_Activity.this, "You need to login first!", Toast.LENGTH_LONG).show();
 				}
-			});
+				else {
+					Bundle myBundle = new Bundle();
+					myBundle.putString("name",person_name);
+					myBundle.putString("username", userName);
+					inten.putExtras(myBundle);
+					startActivity(inten);
+				}
+			}		
+		});
+		
 		jump.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -206,7 +272,6 @@ public class Main_Activity extends Activity  {
 				// TODO Auto-generated method stub
 				 storedPassword = "";
 				 person_name = "";
-				 logged_in.setText("");
 				 login.setClickable(true);
 				 login.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
 				 create.setClickable(true);
@@ -217,6 +282,9 @@ public class Main_Activity extends Activity  {
 		});
 		
 	}
+	
+	
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -239,10 +307,11 @@ public class Main_Activity extends Activity  {
 	                 create.setBackgroundColor(Color.GRAY);
 	                 logout.setClickable(true);
 	                 logout.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
-	                 logged_in.setText(person_name.trim()+"is logged in");
+	                sync.setClickable(true);
+	                 sync.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
 				person_name = received.getString("name");
 				userName = received.getString("user");
-					logged_in.setText(person_name+" is logged in");
+					
 			
 				// }
 			}
@@ -251,6 +320,15 @@ public class Main_Activity extends Activity  {
 			}
 			else if(resultCode == Activity.RESULT_CANCELED){
 				 //Toast.makeText(MainActivity.this, "User already exists", Toast.LENGTH_LONG).show();//finishActivity(123);
+			}
+		}
+		else if(requestCode == 321){
+			if(resultCode == RESULT_OK){
+				//progress.dismiss();
+				Toast.makeText(this, "Data Uploaded Succesfully!!", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				Toast.makeText(this, "Error uploading!!", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
@@ -262,6 +340,22 @@ public class Main_Activity extends Activity  {
 		return true;
 	}
 	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (myprefs != null && 
+				myprefs.contains("userN")) { 
+				//object and key found, show all saved values 
+				person_name = myprefs.getString("name", ""); 
+				userName = myprefs.getString("userN", "");
+		} 
+		else 
+		{ 
+			person_name = "";
+			userName=""; 
+		}
+	}
+	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
@@ -270,6 +364,10 @@ public class Main_Activity extends Activity  {
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
+		SharedPreferences.Editor editor = myprefs.edit();
+		editor.putString("userN", userName);
+		editor.putString("name",person_name);
+		editor.commit();
 		super.onPause();
 	}
 }

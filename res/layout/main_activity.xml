@@ -60,21 +60,6 @@
               android:text="@string/jump" />
 
           <Button
-              android:id="@+id/logout"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentBottom="true"
-              android:layout_centerHorizontal="true"
-              android:layout_marginBottom="18dp"
-              android:background="@color/CornflowerBlue"
-              android:height="30dp"
-              android:text="@string/logout"
-              android:textSize="15sp"
-              android:textStyle="italic"
-              android:typeface="serif"
-              android:width="60dp" />
-
-          <Button
               android:id="@+id/login"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -96,26 +81,61 @@
               android:id="@+id/run"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_alignLeft="@+id/create_user"
               android:layout_below="@+id/create_user"
-              android:layout_marginRight="32dp"
-              android:layout_marginTop="60dp"
-              android:layout_toLeftOf="@+id/beep"
+              android:layout_marginLeft="32dp"
+              android:layout_marginTop="34dp"
               android:background="@color/CornflowerBlue"
               android:drawableTop="@drawable/running"
               android:text="@string/record" />
 
-          <TextView
-              android:id="@+id/Logged_in_person"
+          <Button
+              android:id="@+id/logout"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_alignLeft="@+id/create_user"
-              android:layout_alignRight="@+id/beep"
-              android:layout_below="@+id/create_user"
-              android:layout_marginTop="15dp"
-              android:background="@color/Black"
+              android:layout_alignLeft="@+id/jump"
+              android:layout_below="@+id/jump"
+              android:layout_marginTop="32dp"
+              android:background="@color/CornflowerBlue"
               android:height="30dp"
-              android:textColor="@color/CornflowerBlue"
-              android:textSize="20sp"
-              android:textStyle="bold" />
+              android:text="@string/logout"
+              android:textSize="15sp"
+              android:textStyle="italic"
+              android:typeface="serif"
+              android:width="60dp" />
+
+          <Button
+              android:id="@+id/hlp"
+              style="?android:attr/buttonStyleSmall"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignBaseline="@+id/syn"
+              android:layout_alignBottom="@+id/syn"
+              android:layout_alignRight="@+id/speed"
+              android:background="@color/CornflowerBlue"
+              android:height="30dp"
+              android:text="@string/help"
+              android:textColor="@color/Black"
+              android:textSize="15sp"
+              android:textStyle="italic"
+              android:typeface="serif"
+              android:width="60dp" />
+
+          <Button
+              android:id="@+id/syn"
+              style="?android:attr/buttonStyleSmall"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignBaseline="@+id/logout"
+              android:layout_alignBottom="@+id/logout"
+              android:layout_centerHorizontal="true"
+              android:background="@color/CornflowerBlue"
+              android:height="30dp"
+              android:text="@string/sync"
+              android:textColor="@color/Black"
+              android:textSize="15sp"
+              android:textStyle="italic"
+              android:typeface="serif"
+              android:width="60dp" />
     
 </RelativeLayout>

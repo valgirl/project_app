@@ -3,10 +3,13 @@ package com.example.speedtracker;
 import java.util.logging.Logger;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
 
 public class Database_Helper {
 	
@@ -15,11 +18,14 @@ public class Database_Helper {
 	private StringBuffer txt;
 	SQLiteDatabase db;
 	private Logger log;
+	private Context content;
 	 
-	 
-	 public Database_Helper(String path){
+	
+	public Database_Helper(String path, Context applicationContext) {
+		// TODO Auto-generated constructor stub
 		openDatabase(path);
 		//addContents();
+		content = applicationContext;
 		log = Logger.getLogger("Database Helper");
 		log.info("In database Helper");
 	}
@@ -27,7 +33,7 @@ public class Database_Helper {
 	
 	public static synchronized Database_Helper getInstance(){
 		if(instance == null){
-			instance = new Database_Helper("people_speed.db");
+			instance = new Database_Helper("people_speed.db", null);
 		}
 		
 		return instance;
@@ -57,7 +63,7 @@ public class Database_Helper {
 	private void openDatabase(String path) {
         try {        	
            txt = new StringBuffer();
-          SDcardPath = Environment.getExternalStorageDirectory().getPath();
+          SDcardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
           myDbPath = SDcardPath + "/" + path; 
             
         	txt.append("\n-openDatabase - DB Path: " + myDbPath);
@@ -71,7 +77,10 @@ public class Database_Helper {
         	txt.append("\n-openDatabase - DB was opened");
         }
         catch (SQLiteException e) {
-        	 log.info(e.getMessage());   	
+        	 log.info(e.getMessage());
+        	 Log.i("No Database", "No SD Card for database");
+        	 Toast.makeText(content,
+ e.getClass().getName() + " " + e.getMessage(),Toast.LENGTH_LONG).show();
         }
         db.beginTransaction();
 		try {
@@ -86,8 +95,8 @@ public class Database_Helper {
 			        + " age text, " 
 			        + " weight text, " 
 			        + " height text, " 
-			        + " speedtest text, " 
-			        + " beeptest text, " 
+			        + " speed text, " 
+			        + " beep text, " 
 			        + " run text, " 
 			        + " coach text, " 
 			        + " jump text );"); 

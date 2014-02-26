@@ -360,74 +360,88 @@ containing a value of this type.
         public static final int common_signin_btn_text_normal_light=0x7f020016;
         public static final int common_signin_btn_text_pressed_dark=0x7f020017;
         public static final int common_signin_btn_text_pressed_light=0x7f020018;
-        public static final int ic_launcher=0x7f020019;
-        public static final int ic_plusone_medium_off_client=0x7f02001a;
-        public static final int ic_plusone_small_off_client=0x7f02001b;
-        public static final int ic_plusone_standard_off_client=0x7f02001c;
-        public static final int ic_plusone_tall_off_client=0x7f02001d;
-        public static final int jump=0x7f02001e;
-        public static final int jump1=0x7f02001f;
-        public static final int jump2=0x7f020020;
-        public static final int log=0x7f020021;
-        public static final int profile=0x7f020022;
-        public static final int record=0x7f020023;
-        public static final int run_leg=0x7f020024;
-        public static final int running=0x7f020025;
-        public static final int runnning_man_android=0x7f020026;
-        public static final int shuttle=0x7f020027;
-        public static final int speed=0x7f020028;
+        public static final int ic_action_back=0x7f020019;
+        public static final int ic_action_forward=0x7f02001a;
+        public static final int ic_action_next_item=0x7f02001b;
+        public static final int ic_action_previous_item=0x7f02001c;
+        public static final int ic_launcher=0x7f02001d;
+        public static final int ic_plusone_medium_off_client=0x7f02001e;
+        public static final int ic_plusone_small_off_client=0x7f02001f;
+        public static final int ic_plusone_standard_off_client=0x7f020020;
+        public static final int ic_plusone_tall_off_client=0x7f020021;
+        public static final int jump=0x7f020022;
+        public static final int jump1=0x7f020023;
+        public static final int jump2=0x7f020024;
+        public static final int log=0x7f020025;
+        public static final int profile=0x7f020026;
+        public static final int rec=0x7f020027;
+        public static final int record=0x7f020028;
+        public static final int record_stop=0x7f020029;
+        public static final int run_leg=0x7f02002a;
+        public static final int running=0x7f02002b;
+        public static final int runnning_man_android=0x7f02002c;
+        public static final int shuttle=0x7f02002d;
+        public static final int speed=0x7f02002e;
     }
     public static final class id {
-        public static final int Logged_in_person=0x7f050013;
-        public static final int action_settings=0x7f050031;
+        public static final int Logged_in_person=0x7f05001b;
+        public static final int action_settings=0x7f050039;
         public static final int add_coach_ok_btn=0x7f050007;
-        public static final int age=0x7f050022;
-        public static final int beep=0x7f050018;
-        public static final int coach_add=0x7f050029;
+        public static final int age=0x7f05002c;
+        public static final int attempt_view=0x7f050014;
+        public static final int back=0x7f05000a;
+        public static final int beep=0x7f050020;
+        public static final int best_jp=0x7f050018;
+        public static final int coach_add=0x7f050033;
         public static final int coach_name=0x7f050006;
-        public static final int coach_spinner=0x7f050028;
-        public static final int create_user=0x7f050015;
-        public static final int fname=0x7f05001e;
-        public static final int fname_jump=0x7f05000a;
-        public static final int fname_prompt=0x7f050008;
-        public static final int fname_speed=0x7f050027;
-        public static final int fst_name_speed=0x7f05001d;
-        public static final int height=0x7f050024;
-        public static final int height_total=0x7f05000e;
+        public static final int coach_spinner=0x7f050032;
+        public static final int create_user=0x7f05001d;
+        public static final int fname=0x7f050028;
+        public static final int fname_jump=0x7f05000c;
+        public static final int fname_prompt=0x7f05000d;
+        public static final int fname_speed=0x7f050031;
+        public static final int fst_name_speed=0x7f050027;
+        public static final int height=0x7f05002e;
+        public static final int height_total=0x7f050010;
+        public static final int hlp=0x7f050024;
         public static final int hybrid=0x7f050004;
-        public static final int jump=0x7f050019;
-        public static final int lname=0x7f05001f;
+        public static final int jump=0x7f050021;
+        public static final int lname=0x7f050029;
         public static final int logg=0x7f050005;
-        public static final int login=0x7f050016;
-        public static final int loginbutton_login=0x7f050011;
-        public static final int logout=0x7f05001b;
-        public static final int map=0x7f05002b;
-        public static final int myTitle=0x7f05001c;
-        public static final int new_user_login=0x7f05002a;
+        public static final int login=0x7f05001e;
+        public static final int loginbutton_login=0x7f050019;
+        public static final int logout=0x7f050023;
+        public static final int map=0x7f050035;
+        public static final int myTitle=0x7f050026;
+        public static final int new_user_login=0x7f050034;
+        public static final int next=0x7f05000b;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
-        public static final int pass_login=0x7f050012;
-        public static final int password=0x7f050021;
-        public static final int run=0x7f05001a;
+        public static final int pass_login=0x7f05001a;
+        public static final int password=0x7f05002b;
+        public static final int rec=0x7f050036;
+        public static final int run=0x7f050022;
         public static final int satellite=0x7f050002;
-        public static final int save_jump=0x7f050010;
-        public static final int speed=0x7f050017;
-        public static final int start_jump=0x7f05000b;
-        public static final int start_speed=0x7f050030;
+        public static final int save_jump=0x7f050012;
+        public static final int speed=0x7f05001f;
+        public static final int start_jump=0x7f050016;
+        public static final int start_speed=0x7f050038;
+        public static final int syn=0x7f050025;
         public static final int terrain=0x7f050003;
-        public static final int textView1=0x7f05002d;
-        public static final int textView2=0x7f05002c;
-        public static final int textView3=0x7f05002e;
-        public static final int textView5=0x7f05000f;
-        public static final int textView6=0x7f05000c;
-        public static final int textView7=0x7f050023;
-        public static final int total_dist_speed=0x7f05002f;
-        public static final int us_name_jump=0x7f05000d;
-        public static final int user_Name=0x7f050020;
-        public static final int user_login=0x7f050014;
-        public static final int user_speed=0x7f050009;
-        public static final int usern_speed=0x7f050026;
-        public static final int weight=0x7f050025;
+        public static final int textView2=0x7f050013;
+        public static final int textView3=0x7f050017;
+        public static final int textView5=0x7f050011;
+        public static final int textView6=0x7f050015;
+        public static final int textView7=0x7f05002d;
+        public static final int title_box=0x7f050008;
+        public static final int total_dist_speed=0x7f050037;
+        public static final int txt1=0x7f050009;
+        public static final int us_name_jump=0x7f05000f;
+        public static final int user_Name=0x7f05002a;
+        public static final int user_login=0x7f05001c;
+        public static final int user_speed=0x7f05000e;
+        public static final int usern_speed=0x7f050030;
+        public static final int weight=0x7f05002f;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
@@ -435,22 +449,28 @@ containing a value of this type.
     public static final class layout {
         public static final int add_coach=0x7f030000;
         public static final int beep=0x7f030001;
-        public static final int jump=0x7f030002;
-        public static final int login=0x7f030003;
-        public static final int main_activity=0x7f030004;
-        public static final int mytitle=0x7f030005;
-        public static final int new_user=0x7f030006;
-        public static final int run=0x7f030007;
-        public static final int speed=0x7f030008;
+        public static final int help=0x7f030002;
+        public static final int jump=0x7f030003;
+        public static final int login=0x7f030004;
+        public static final int main_activity=0x7f030005;
+        public static final int mytitle=0x7f030006;
+        public static final int new_user=0x7f030007;
+        public static final int run=0x7f030008;
+        public static final int speed=0x7f030009;
     }
     public static final class menu {
         public static final int main=0x7f0a0000;
     }
     public static final class string {
         public static final int action_settings=0x7f06001b;
-        public static final int add_coach=0x7f060032;
-        public static final int age=0x7f060026;
+        public static final int add_coach=0x7f06002f;
+        public static final int age=0x7f060027;
+        /**   main strings
+         */
         public static final int app_name=0x7f06001a;
+        /**   jump strings 
+         */
+        public static final int att=0x7f060032;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
          */
@@ -474,9 +494,12 @@ containing a value of this type.
         [CHAR LIMIT=70] 
          */
         public static final int auth_client_using_bad_version_title=0x7f060014;
-        public static final int beep=0x7f060023;
-        public static final int coach=0x7f060031;
-        public static final int coach_name=0x7f060036;
+        public static final int beep=0x7f060021;
+        public static final int beep_help=0x7f060043;
+        public static final int beep_test=0x7f06003b;
+        public static final int best=0x7f060037;
+        public static final int coach=0x7f06002e;
+        public static final int coach_name=0x7f060031;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -548,28 +571,50 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f060013;
-        public static final int create=0x7f060030;
-        public static final int create_user=0x7f060033;
-        public static final int enter=0x7f060029;
-        public static final int fname=0x7f060024;
-        public static final int height=0x7f06002b;
-        public static final int hello_world=0x7f06001c;
-        public static final int jump=0x7f060022;
-        public static final int lname=0x7f060025;
-        public static final int log=0x7f060020;
-        public static final int login=0x7f060021;
-        public static final int logout=0x7f06002e;
-        public static final int ok=0x7f060035;
-        public static final int pass=0x7f060028;
-        public static final int profile=0x7f06001d;
-        public static final int record=0x7f06001f;
-        public static final int save=0x7f06002d;
-        public static final int speed=0x7f06001e;
-        public static final int start=0x7f06002a;
-        public static final int time=0x7f06002c;
-        public static final int tot_distance=0x7f060034;
-        public static final int username=0x7f06002f;
-        public static final int weight=0x7f060027;
+        public static final int create=0x7f06002d;
+        public static final int create_user=0x7f060022;
+        public static final int enter=0x7f06002a;
+        /**   createpage strings 
+         */
+        public static final int fname=0x7f060025;
+        public static final int height=0x7f060034;
+        public static final int help=0x7f06003f;
+        /**   main 
+         */
+        public static final int help_main=0x7f06003e;
+        public static final int jump=0x7f060020;
+        public static final int jump_help=0x7f060040;
+        public static final int jump_instructions=0x7f060036;
+        public static final int lname=0x7f060026;
+        public static final int login=0x7f06001f;
+        public static final int logout=0x7f060023;
+        public static final int ok=0x7f060030;
+        public static final int pass=0x7f060029;
+        public static final int power_test=0x7f06003d;
+        public static final int profile=0x7f06001c;
+        /**   run strings 
+         */
+        public static final int rec=0x7f060039;
+        public static final int record=0x7f06001e;
+        public static final int run_help=0x7f060041;
+        /**   beep strings 
+  help documents 
+  title strings
+         */
+        public static final int run_test=0x7f06003a;
+        public static final int save=0x7f06002b;
+        public static final int speed=0x7f06001d;
+        public static final int speed_help=0x7f060042;
+        public static final int sprint_test=0x7f06003c;
+        public static final int start=0x7f060033;
+        public static final int sync=0x7f060024;
+        public static final int sync_help=0x7f060044;
+        public static final int time=0x7f060035;
+        /**   speed strings 
+         */
+        public static final int tot_distance=0x7f060038;
+        public static final int username=0x7f06002c;
+        public static final int weight=0x7f060028;
     }
     public static final class style {
         /** 

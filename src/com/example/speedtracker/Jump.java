@@ -33,6 +33,9 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 	private  SensorEventListener event_listener;
 	private Logger log;
 	private TextView height;
+	private TextView attempt;
+	private TextView best;
+	private Button save;
 	private float min;
 	private boolean jump_flag=false;
 	private boolean start_flag = false;
@@ -40,6 +43,8 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 	private long stop_time;
 	private long time;
 	private double distance;
+	private int jump_index;
+	private double distance_best;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -52,8 +57,11 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 	       event_listener = this;
 		dbh = Database_Helper.getInstance();
 		min = 0;
+		jump_index = 0;
 		
+		best = (TextView)findViewById(R.id.best_jp);
 		height = (TextView)findViewById(R.id.height_total);
+		attempt = (TextView)findViewById(R.id.attempt_view);
 		Intent get_values= getIntent();
 		Bundle myBundle = get_values.getExtras();
 		fname = myBundle.getString("name");
@@ -64,31 +72,40 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		TextView usern = (TextView)findViewById(R.id.us_name_jump);
 		nme.setText(fname);
 		usern.setText(user);
-		Button save = (Button)findViewById(R.id.save_jump);
+		
+		save = (Button)findViewById(R.id.save_jump);
+		save.setClickable(false);
 		save.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) throws SQLException{
 				// TODO Auto-generated method stub
 				try{
-					Cursor s = dbh.db.rawQuery("select * from Person where username = '"+user+"'",null);
-					log.info("Query is: "+s.toString()+" and user is: "+user);
-					int index = s.getColumnIndexOrThrow("jump");
-					log.info("Count of rows is: "+s.getCount());
-					String jp;
-					StringBuffer sb = new StringBuffer();
-					s.moveToFirst();
-					if((jp = s.getString(index)) != null){
-						
-						sb.append(jp);
-						String s1 = String.format("%.2f", distance);
-						sb.append("%"+s1);
-						height.setText("");
-						log.info("String buffer is: "+sb.toString());
+					if(jump_index == 3){
+						Cursor s = dbh.db.rawQuery("select * from Person where username = '"+user+"'",null);
+			
+						log.info("Query is: "+s.toString()+" and user is: "+user);
+						int index = s.getColumnIndexOrThrow("jump");
+						log.info("Count of rows is: "+s.getCount());
+						String jp;
+						StringBuffer sb = new StringBuffer();
+						s.moveToFirst();
+						if((jp = s.getString(index)) != null){
+							
+							sb.append(jp);
+							String s1 = String.format("%.2f", distance);
+							sb.append("%"+s1);
+							height.setText("");
+							log.info("String buffer is: "+sb.toString());
+						}
+					
+						dbh.db.execSQL("update Person set jump = '"+sb+"' where username = '"+user+"'");
+						Toast.makeText(Jump.this, "Data saved", Toast.LENGTH_SHORT).show();
+						jump_index = 0;
 					}
-				
-					dbh.db.execSQL("update Person set jump = '"+sb+"' where username = '"+user+"'");
-					 Toast.makeText(Jump.this, "Data saved", Toast.LENGTH_SHORT).show();
+					else{
+						Toast.makeText(Jump.this, "You need to do 3 jumps!", Toast.LENGTH_SHORT).show();
+					}
 				}
 				catch(SQLException e){
 					log.info("Query not executes string invalid "+e.toString() );
@@ -96,7 +113,9 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 				catch(IllegalArgumentException e1){
 					log.info("Column does not exist -1 returned from cursor");
 				}
+				finish();
 			}
+		
 		});
 		Button start = (Button)findViewById(R.id.start_jump);
 		
@@ -109,7 +128,8 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 				height.setText("");
 				String s = "3, 2, 1, Go!";
 			    speak(s);
-				
+				jump_index++;
+				attempt.setText(Integer.toString(jump_index));
 				mgr.registerListener(event_listener, accel, SensorManager.SENSOR_DELAY_NORMAL);
 			}
 		});
@@ -121,7 +141,7 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		}
 	}
 	public void stop(){
-		
+			
 		min = min*-1;
 		log.info("StartTime "+start_time);
 		log.info("StopTime "+stop_time);
@@ -134,6 +154,16 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		log.info("Distance "+distance);
 		distance = distance * 100;
 		height.setText(String.format("%.2f", distance));
+		if(jump_index == 1) distance_best = distance;
+		else if(jump_index == 2) {
+			if(distance > distance_best) distance_best = distance;
+		}
+		else if(jump_index == 3) {
+			save.setClickable(true);
+			if(distance > distance_best) distance_best = distance;
+			best.setText(String.format(".2f", distance_best));
+		}
+		
 		time = 0;
 		min = 0;
 		start_flag = false;
