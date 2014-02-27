@@ -4,10 +4,24 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,96 +36,31 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-public class Sync extends Activity{
+public class Sync{
 		
 		private Logger log;
-		private String user_name_to_getsql;
-		private Database_Helper dbh;
-		private Cursor myCursor;
-		private String lname;
-		private String age;
-		private String weight;
-		private String height;
-		private String user_na;
-		private String pass;
-		private String firsname;
-		private String coach;
-		private String run;
-		private String speed;
-		private String jump;
-		private String beep;
-		private Context con;
+	    public String ret;
+	    public boolean finished_flag=false;
+		private boolean get_coach=false;
+		public ArrayList<String> coaches;
 		
-		@Override
-		protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
+	public Sync(String s){
 		
-		Intent get_values= getIntent();
-		Bundle myBundle = get_values.getExtras();
-
-		user_name_to_getsql = myBundle.getString("username");
-		log.info("user is: "+user_name_to_getsql);
-			
-		log = Logger.getLogger("sync");
-		dbh = Database_Helper.getInstance();
-		
-			
-			myCursor = dbh.db.rawQuery("select * from Person where username = '"+user_name_to_getsql+"'",null);
-			int passint = myCursor.getColumnIndex("password");
-			int fnameint = myCursor.getColumnIndex("fname");
-			int userint = myCursor.getColumnIndex("username");
-			int lastnameint = myCursor.getColumnIndex("lname");
-			int ageint = myCursor.getColumnIndex("age");
-			int weightint = myCursor.getColumnIndex("weight");
-			int heightint = myCursor.getColumnIndex("height");
-			int speedint = myCursor.getColumnIndex("speed");
-			int beepint = myCursor.getColumnIndex("beep");
-			int runint = myCursor.getColumnIndex("run");
-			int coachint = myCursor.getColumnIndex("coach");
-			int jumpint = myCursor.getColumnIndex("jump");
-			
-			if(myCursor.getCount() > 0){
-				myCursor.moveToFirst();
-				 lname = myCursor.getString(lastnameint);
-				 age = myCursor.getString(ageint);
-				 weight =  myCursor.getString(weightint);
-				 height =  myCursor.getString(heightint);
-				 user_na =  myCursor.getString(userint);
-				 pass =  myCursor.getString(passint);
-				 firsname =  myCursor.getString(fnameint);
-				 coach =  myCursor.getString(coachint);
-				run =  myCursor.getString(runint);
-				 speed =  myCursor.getString(speedint);
-				jump =  myCursor.getString(jumpint);
-				beep =  myCursor.getString(beepint);
-				 HashMap<String, String> map = new HashMap<String,String>();
-				 map.put("first_name", firsname);
-				 map.put("last_name", lname);
-				 map.put("user_name", user_na);
-				 map.put("password", pass);
-				 map.put("age_value", age);
-				 map.put("height_value", height);
-				 map.put("weight_value", weight);
-				 map.put("run_values", run);
-				 map.put("beep_values", beep);
-				 map.put("speed_values", speed);
-				 map.put("jump_values", jump);
-				 map.put("coach_name", coach);
-				 JSONObject js = new JSONObject(map);
-				 String j = js.toString();
-		   new Download().execute(j); 
-			}
-			else{
-				log.info("no entry in database");
-				Log.i("cursor sql","SQL ERROR");
-			}
-			
+		if(s.contains("fetch")) {
+			get_coach = true;
+			coaches = new ArrayList<String>();
+			ret = "";
+		}
+	}
+	public String getData(String s){
+		 new Download().execute(s);
+		return ret;
 	}
 	
 	private class Download extends AsyncTask<String, Void, String> {
        
-		 @Override
+		Logger log = Logger.getLogger("Sync Task Background");
+		@Override
         protected String doInBackground(String... urls) {
               
             // params comes from the execute() call: params[0] is the url.
@@ -120,47 +69,80 @@ public class Sync extends Activity{
                 return connection(urls[0]);
             } catch (IOException e) {
             	log.info("Error: "+e);
-                return "Unable to retrieve web page. URL may be invalid.";
+            	
+                return "Error";
             }
         }
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-         
-            if(result.contains("Failed")){
-            	 setResult(Activity.RESULT_CANCELED);
-            	 //Toast.makeText(con, "Error uploading!!", Toast.LENGTH_SHORT).show();
+                 
+            if(get_coach){
+            	if(result.contains("Error")) ret = "Error";
+            	 else if(result.contains("ok")){
+                 	ret = "ok";
+                 
+                 }
+            	 else if(result.contains("null")){
+            		 ret = "internet";
+            	 }
+            	finished_flag = true;
             }
-            else{
-            	 setResult(Activity.RESULT_OK);
-            	//Toast.makeText(con, "Data uploaded", Toast.LENGTH_SHORT).show();
-            }
-            finish();
+           
         }
     }
  
 	private String connection (String s)throws IOException{
 		Logger log = Logger.getLogger("Connection");
 		log.info("In connection "+s);
-		URL url;
-		InputStream is = null;
-        HttpURLConnection con;
-			
-        url = new URL("http://10.12.6.208/test_sql.php?jsondata="+s);
-				con = (HttpURLConnection) url.openConnection();
-			//	con.setDoInput(true);
-				//con.setDoInput(true);
-				con.setRequestMethod("POST");
-			
-				con.connect();
-				is = con.getInputStream();
-				BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			    log.info("Sent String ");
-	
-		     String response = br.readLine();
-		      
-		      log.info(response);
-			
-	    	return response;	
-	}
+		String url;
+		StringBuffer sb = new StringBuffer();
+		if(get_coach) url = "http://10.12.6.208/coach.php";
+		else url = "http://10.12.6.208/sync_sql.php";
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost(url);
+		HttpResponse response;
+		
+			ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();  
+	         param.add(new BasicNameValuePair("fetch", s)); 
+				httppost.setEntity(new UrlEncodedFormEntity(param));
+			  //  con.setConnectTimeout(5000);
+				//  ResponseHandler<String> responseHandler = new BasicResponseHandler();
+				response = httpclient.execute(httppost);
+				HttpEntity entity = response.getEntity();
+		            if(entity!=null){
+		            	JSONObject json;
+						try {
+							InputStream in = entity.getContent();
+							 BufferedReader br = new BufferedReader(new InputStreamReader(in)); 
+							 String line;
+							 while ((line = br.readLine()) != null) {
+						            sb.append(line + "\n");
+						        }
+							
+							 in.close();
+							 log.info("result string is: "+sb.toString());
+							
+							 json = new JSONObject(sb.toString());
+							// JSONArray ja = json.getJSONArray("posts");
+							 log.info("Length of array "+json.length());
+					            for (int i = 0; i < json.length()-1; i++) {
+									coaches.add(json.getString(""+i));
+									log.info(json.getString(""+i));
+								}
+					            String st = "";
+					            Log.i("Read from Server",sb.toString() );
+					            return st;
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							Log.i("JSON ERROR",e.getMessage());
+							return "Error";
+						}           
+		            }
+		            else{
+		            	return "null";
+		            }
+		 }
+				
 }

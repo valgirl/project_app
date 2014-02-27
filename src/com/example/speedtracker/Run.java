@@ -249,8 +249,8 @@ GooglePlayServicesClient.OnConnectionFailedListener, android.location.LocationLi
 		@Override
 		protected void onPause() {
 			// TODO Auto-generated method stub
-			location_cl.removeLocationUpdates(Run.this);
-			location_cl.disconnect();
+			//location_cl.removeLocationUpdates(Run.this);
+			//location_cl.disconnect();
 			super.onPause();
 		}
 		@Override

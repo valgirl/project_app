@@ -1,9 +1,28 @@
 package com.example.speedtracker;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Logger;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.example.speedtracker.R.color;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
@@ -12,6 +31,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -79,8 +99,8 @@ public class Main_Activity extends Activity  {
 				if(!person_name.isEmpty()){
 					login.setClickable(false);
 	                login.setBackgroundColor(Color.GRAY);
-	                create.setClickable(false);
-	                create.setBackgroundColor(Color.GRAY);
+	                //create.setClickable(false);
+	               // create.setBackgroundColor(Color.GRAY);
 	                logout.setClickable(true);
 	                sync.setClickable(true);
 	                sync.setBackgroundColor(getResources().getColor(color.CornflowerBlue));
@@ -106,13 +126,12 @@ public class Main_Activity extends Activity  {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//progress = ProgressDialog.show(getApplicationContext(), "Wait", "Uploading");
-				log.info("username is: "+userName);
-				Intent inten = new Intent(Main_Activity.this, Sync.class);
-				Bundle myBundle = new Bundle();
-				myBundle.putString("username", userName);
-				inten.putExtras(myBundle);
-				startActivityForResult(inten, 321);
+				
+				String s=  get_UserData();
+				if(s.isEmpty()) {
+					Toast.makeText(Main_Activity.this, "Errror reading database", Toast.LENGTH_LONG).show();
+				}
+				else new Download().execute(s);
 			}
 		});
 		speed.setOnClickListener(new View.OnClickListener() {
@@ -182,8 +201,8 @@ public class Main_Activity extends Activity  {
 			                        Toast.makeText(Main_Activity.this, "Login Successfull", Toast.LENGTH_LONG).show();
 			                        login.setClickable(false);
 			                        login.setBackgroundColor(Color.GRAY);
-			                        create.setClickable(false);
-			                        create.setBackgroundColor(Color.GRAY);
+			                       // create.setClickable(false);
+			                       // create.setBackgroundColor(Color.GRAY);
 			                        logout.setClickable(true);
 			                        logout.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
 			                        sync.setClickable(true);
@@ -220,8 +239,14 @@ public class Main_Activity extends Activity  {
 			public void onClick(View v) {
 		// TODO Auto-generated method stub
 				Intent inten = new Intent(Main_Activity.this, Create_User.class);
-	
-				startActivityForResult(inten, 123);
+				Bundle myBundle = new Bundle();
+				if(userName.isEmpty()) userName="";
+				
+					myBundle.putString("username", userName);
+					inten.putExtras(myBundle);
+					startActivityForResult(inten, 234);
+				
+
 				}
 			});
 		
@@ -274,10 +299,12 @@ public class Main_Activity extends Activity  {
 				 person_name = "";
 				 login.setClickable(true);
 				 login.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
-				 create.setClickable(true);
-				 create.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
+				// create.setClickable(true);
+				// create.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
 				 logout.setClickable(false);
 				 logout.setBackgroundColor(color.gray);
+				 sync.setClickable(false);
+				 sync.setBackgroundColor(color.gray);
 			}
 		});
 		
@@ -290,7 +317,7 @@ public class Main_Activity extends Activity  {
 		// TODO Auto-generated method stub
 		log.info("In results");
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 123) {
+		if (requestCode == 234) {
 			
 			// Activity2 is over - see what happened
 			if (resultCode == Activity.RESULT_OK) {
@@ -303,8 +330,8 @@ public class Main_Activity extends Activity  {
 					 Bundle received = data.getExtras();
 					 login.setClickable(false);
 	                 login.setBackgroundColor(Color.GRAY);
-	                 create.setClickable(false);
-	                 create.setBackgroundColor(Color.GRAY);
+	               //  create.setClickable(false);
+	                // create.setBackgroundColor(Color.GRAY);
 	                 logout.setClickable(true);
 	                 logout.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
 	                sync.setClickable(true);
@@ -322,17 +349,74 @@ public class Main_Activity extends Activity  {
 				 //Toast.makeText(MainActivity.this, "User already exists", Toast.LENGTH_LONG).show();//finishActivity(123);
 			}
 		}
-		else if(requestCode == 321){
-			if(resultCode == RESULT_OK){
-				//progress.dismiss();
-				Toast.makeText(this, "Data Uploaded Succesfully!!", Toast.LENGTH_SHORT).show();
-			}
-			else{
-				Toast.makeText(this, "Error uploading!!", Toast.LENGTH_SHORT).show();
-			}
-		}
+		
+		
 	}
 
+	private String get_UserData(){
+		
+		String lname;
+		String age;
+		String weight;
+		String height;
+		 String user_na;
+		 String pass;
+		 String firsname;
+		 String coach;
+		 String run1;
+		 String speed1;
+		 String jump1;
+		 String beep1;
+		
+		myCursor = dbh.db.rawQuery("select * from Person where username = '"+userName+"'",null);
+		int passint = myCursor.getColumnIndex("password");
+		int fnameint = myCursor.getColumnIndex("fname");
+		int userint = myCursor.getColumnIndex("username");
+		int lastnameint = myCursor.getColumnIndex("lname");
+		int ageint = myCursor.getColumnIndex("age");
+		int weightint = myCursor.getColumnIndex("weight");
+		int heightint = myCursor.getColumnIndex("height");
+		int speedint = myCursor.getColumnIndex("speed");
+		int beepint = myCursor.getColumnIndex("beep");
+		int runint = myCursor.getColumnIndex("run");
+		int coachint = myCursor.getColumnIndex("coach");
+		int jumpint = myCursor.getColumnIndex("jump");
+		
+		if(myCursor.getCount() > 0){
+			myCursor.moveToFirst();
+			 lname = myCursor.getString(lastnameint);
+			 age = myCursor.getString(ageint);
+			 weight =  myCursor.getString(weightint);
+			 height =  myCursor.getString(heightint);
+			 user_na =  myCursor.getString(userint);
+			 pass =  myCursor.getString(passint);
+			 firsname =  myCursor.getString(fnameint);
+			 coach =  myCursor.getString(coachint);
+			run1 =  myCursor.getString(runint);
+			 speed1 =  myCursor.getString(speedint);
+			jump1 =  myCursor.getString(jumpint);
+			beep1 =  myCursor.getString(beepint);
+			 HashMap<String, String> map = new HashMap<String,String>();
+			 map.put("first_name", firsname);
+			 map.put("last_name", lname);
+			 map.put("user_name", user_na);
+			 map.put("password", pass);
+			 map.put("age_value", age);
+			 map.put("height_value", height);
+			 map.put("weight_value", weight);
+			 map.put("run_values", run1);
+			 map.put("beep_values", beep1);
+			 map.put("speed_values", speed1);
+			 map.put("jump_values", jump1);
+			 map.put("coach_name", coach);
+			 JSONObject js = new JSONObject(map);
+			 String j = js.toString();
+			 return j;
+		}
+		else{
+			return"";
+	}
+}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -370,4 +454,82 @@ public class Main_Activity extends Activity  {
 		editor.commit();
 		super.onPause();
 	}
+
+ class Download extends AsyncTask<String, Void, String> {
+    
+	 ProgressDialog pd = new ProgressDialog(Main_Activity.this);
+	 
+	 @Override
+	protected void onPreExecute() {
+		// TODO Auto-generated method stub
+		pd.setMessage("Wait Connecting");
+		pd.show();
+		super.onPreExecute();
+	}
+	 
+	 
+	 @Override
+   protected String doInBackground(String... urls){
+		 
+		 Logger log = Logger.getLogger("Connection");
+		String s = urls[0];	
+		 log.info("In connection "+s);
+			String url = "http://10.12.6.208/sync_sql.php";;
+			StringBuffer sb = new StringBuffer();
+			DefaultHttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(url);
+			HttpResponse response;
+			try {
+				ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();  
+				params.add(new BasicNameValuePair("userdata", s)); 
+				
+					httppost.setEntity(new UrlEncodedFormEntity(params));
+					response = httpclient.execute(httppost);
+					log.info("Sent String ");
+					if (response != null) {
+			            InputStream in = response.getEntity().getContent(); // Get the
+			              BufferedReader br = new BufferedReader(new InputStreamReader(in));                                                  // data in
+			                                                                                                                          // entity
+			            String a = br.readLine();
+			            Log.i("Read from Server", a);
+			            return a;
+			        }
+					else{
+						return "internet";			 	
+					}
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Log.i("doinbackground", e.getMessage());
+					return "Error";
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Log.i("doinbackground", e.getMessage());
+					return "Error";
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Log.i("doinbackground", e.getMessage());
+					return "internet";
+				}					
+	 }
+
+   // onPostExecute displays the results of the AsyncTask.
+   @Override
+   protected void onPostExecute(String result) {
+    
+	   pd.dismiss();
+	   if (result.contains("ok")){
+			Toast.makeText(Main_Activity.this, "DataSaved!!", Toast.LENGTH_LONG).show();
+		}
+		else if(result.contains("Error")){
+			Toast.makeText(Main_Activity.this, "Error downloading!!", Toast.LENGTH_LONG).show();
+		}
+		else if(result.contains("internet")){
+			Toast.makeText(Main_Activity.this, "Need Internet Connection!!", Toast.LENGTH_LONG).show();
+		}
+   
+   }
+}
 }
