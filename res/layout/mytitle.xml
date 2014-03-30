@@ -5,6 +5,6 @@
     android:layout_height="fill_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:text="Speed Tracker"
+    android:text="Fitness Tester"
     android:textSize="15sp" />
 

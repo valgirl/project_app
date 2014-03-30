@@ -19,7 +19,7 @@ public class Speed extends Activity implements  SensorEventListener, TextToSpeec
 	private TextView dist;
 	private SensorManager mSensorManager;
 	private  SensorEventListener event_listener;
-	private Sensor mCompass;
+	private Sensor accel;
 	private Button start;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +34,15 @@ public class Speed extends Activity implements  SensorEventListener, TextToSpeec
 		user_name = (TextView)findViewById(R.id.usern_speed);
 		dist = (TextView)findViewById(R.id.total_dist_speed);
 		mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-	    mCompass = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+	    accel = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 	    event_listener = this;
+	    
 	    start.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				mSensorManager.registerListener(event_listener, mCompass,SensorManager.SENSOR_DELAY_FASTEST);
+				mSensorManager.registerListener(event_listener, accel,SensorManager.SENSOR_DELAY_FASTEST);
 			}
 		});
 	}
@@ -77,7 +78,7 @@ public class Speed extends Activity implements  SensorEventListener, TextToSpeec
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
-		float  rot = event.values[0];
-		dist.setText(Float.toString(rot));
+		float  y = event.values[1];
+		
 	}
 }

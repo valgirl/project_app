@@ -51,10 +51,10 @@ public class Database_Helper {
 		init.put("weight", "");
 		init.put("height", "");
 		init.put("age", "");
-		init.put("jump", "");
-		init.put("speedtest", "");
-		init.put("beeptest", "");
-		init.put("run", "");
+		//init.put("jump", "");
+		//init.put("speedtest", "");
+		//init.put("beeptest", "");
+	//	init.put("run", "");
 		db.insert("Person", null, init);
 		//log.info("Contents added");
 		
@@ -84,28 +84,58 @@ public class Database_Helper {
         }
         db.beginTransaction();
 		try {
-			//create table
-			if(path.contains("people")){
+			//create Person table
+			
 				db.execSQL("create table if not exists Person ("
-					+ " recID integer PRIMARY KEY autoincrement, " 
+					+ " recID INTEGER PRIMARY KEY autoincrement, " 
 					+ " username text, " 
 					+ " fname text, " 
 			        + " lname text, " 
 			        + " password text, " 
-			        + " age text, " 
-			        + " weight text, " 
-			        + " height text, " 
-			        + " speed text, " 
-			        + " beep text, " 
-			        + " run text, " 
-			        + " coach text, " 
-			        + " jump text );"); 
-			}
-			else {
-				db.execSQL("create table if not exists Coach ("
-						+ " recID integer PRIMARY KEY autoincrement, " 
-						+ " name text );"); 
-				}
+			        + " age INTEGER, " 
+			        + " weight REAL, " 
+			        + " height REAL, " 
+			        + " coach text );"); 
+			      
+			//create run table
+				db.execSQL("create table if not exists Run ("
+						+ " recID INTEGER PRIMARY KEY autoincrement, " 
+						+ " Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,"
+						+ " run_time TEXT,"
+						+ " data REAL,"
+						+ " personid TEXT );"); 
+				
+				//create jump table
+				db.execSQL("create table if not exists Jump ("
+						+ " recID INTEGER PRIMARY KEY autoincrement, " 
+						+ " Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,"
+						+ " jump_height REAL,"
+						+ " personid TEXT );"); 
+				
+				//create speed table
+				db.execSQL("create table if not exists Speed ("
+						+ " recID INTEGER PRIMARY KEY autoincrement, " 
+						+ " Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,"
+						+ " distance REAL,"
+						+ " personid TEXT );"); 
+				
+				//create beeptest table
+				db.execSQL("create table if not exists Beep("
+						+ " recID INTEGER PRIMARY KEY autoincrement, " 
+						+ " Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,"
+						+ " split1 REAL,"
+						+ " split2 REAL,"
+						+ " split3 REAL,"
+						+ " split4 REAL,"
+						+ " split5 REAL,"
+						+ " split6 REAL,"
+						+ " split7 REAL,"
+						+ " split8 REAL,"
+						+ " split9 REAL,"
+						+ " split10 REAL,"
+						+ " total_time REAL,"
+						+ " personid TEXT );"); 
+				
 			
 			//commit your changes
     		db.setTransactionSuccessful();

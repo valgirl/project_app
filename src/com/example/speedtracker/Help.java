@@ -3,6 +3,7 @@ package com.example.speedtracker;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -15,7 +16,7 @@ public class Help extends Activity implements OnClickListener{
 
 	private TextView disp;
 	private TextView title;
-	private int index=0;
+	private int index;
 	private Button next;
 	private Button back;
 	private Spanned docs[];
@@ -32,6 +33,7 @@ public class Help extends Activity implements OnClickListener{
 		back = (Button)findViewById(R.id.back);
 		disp = (TextView)findViewById(R.id.txt1);
 		title = (TextView)findViewById(R.id.title_box);
+		index = 0;
 		
 		next.setOnClickListener(this);
 		back.setOnClickListener(this);
@@ -60,28 +62,34 @@ public class Help extends Activity implements OnClickListener{
 		// TODO Auto-generated method stub
 		switch(v.getId()){
 		
-			case R.id.next: if(index == 4){
+			case R.id.next: index++;
+							if(index == 4){
 								next.setClickable(false);
-								
+								next.setVisibility(View.INVISIBLE);
 							}
 							else{
-								index++;
 								next.setClickable(true);
+								next.setVisibility(View.VISIBLE);
 								back.setClickable(true);
-								disp.setText(docs[index]);
-								title.setText(titles[index]);
+								back.setVisibility(View.VISIBLE);
 							}
+							disp.setText(docs[index]);
+							title.setText(titles[index]);									
 							break;
-			case R.id.back: if(index == 0){
+							
+			case R.id.back: if(index != 0) index--;
+							if(index == 0){
 								back.setClickable(false);
+								back.setVisibility(View.INVISIBLE);
 							}
-							else{
-								index--;
+							else{				
 								back.setClickable(true);
+								back.setVisibility(View.VISIBLE);
 								next.setClickable(true);
-								disp.setText(docs[index]);
-								title.setText(titles[index]);
+								next.setVisibility(View.VISIBLE);
 							}
+								disp.setText(docs[index]);
+								title.setText(titles[index]);	
 							break;
 				
 		}

@@ -1,9 +1,11 @@
 package com.example.speedtracker;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Logger;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,7 +27,8 @@ import android.widget.Toast;
 public class Jump extends Activity implements SensorEventListener, TextToSpeech.OnInitListener{
 
 	private TextToSpeech tts;
-	private Database_Helper dbh;
+	private Database_Helper dbh_person;
+	private Cursor myCursor;
 	private String fname;
 	private String user;
 	private SensorManager mgr;
@@ -44,6 +47,7 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 	private long time;
 	private double distance;
 	private int jump_index;
+	private String recid;
 	private double distance_best;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,23 +55,38 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.jump);
 		log = Logger.getLogger("Jump");
-		tts = new TextToSpeech(this, this);
-		mgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-	       accel = mgr.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-	       event_listener = this;
-		dbh = Database_Helper.getInstance();
-		min = 0;
-		jump_index = 0;
-		
-		best = (TextView)findViewById(R.id.best_jp);
-		height = (TextView)findViewById(R.id.height_total);
-		attempt = (TextView)findViewById(R.id.attempt_view);
+		dbh_person = Database_Helper.getInstance();
 		Intent get_values= getIntent();
 		Bundle myBundle = get_values.getExtras();
 		fname = myBundle.getString("name");
 		log.info("Name is: "+fname);
 		user = myBundle.getString("username");
 		log.info("user is: "+user);
+		
+		tts = new TextToSpeech(this, this);
+		mgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+	       accel = mgr.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+	       event_listener = this;
+	
+		
+		myCursor = dbh_person.db.rawQuery("select * from Person where username = '"+user+"'",null);
+	
+		//int index = myCursor.getColumnIndexOrThrow("recID");
+		if(myCursor.getCount()>0){
+			myCursor.moveToFirst();
+			recid = user;
+		}
+		else{
+			Toast.makeText(Jump.this, "No input in database!", Toast.LENGTH_SHORT).show();
+		}
+		
+		min = 0;
+		jump_index = 0;
+		
+		best = (TextView)findViewById(R.id.best_jp);
+		height = (TextView)findViewById(R.id.height_total);
+		attempt = (TextView)findViewById(R.id.attempt_view);
+		
 		TextView nme = (TextView)findViewById(R.id.fname_jump);
 		TextView usern = (TextView)findViewById(R.id.us_name_jump);
 		nme.setText(fname);
@@ -75,6 +94,7 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		
 		save = (Button)findViewById(R.id.save_jump);
 		save.setClickable(false);
+		save.setVisibility(View.INVISIBLE);
 		save.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -82,24 +102,14 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 				// TODO Auto-generated method stub
 				try{
 					if(jump_index == 3){
-						Cursor s = dbh.db.rawQuery("select * from Person where username = '"+user+"'",null);
-			
-						log.info("Query is: "+s.toString()+" and user is: "+user);
-						int index = s.getColumnIndexOrThrow("jump");
-						log.info("Count of rows is: "+s.getCount());
-						String jp;
-						StringBuffer sb = new StringBuffer();
-						s.moveToFirst();
-						if((jp = s.getString(index)) != null){
-							
-							sb.append(jp);
-							String s1 = String.format("%.2f", distance);
-							sb.append("%"+s1);
-							height.setText("");
-							log.info("String buffer is: "+sb.toString());
-						}
-					
-						dbh.db.execSQL("update Person set jump = '"+sb+"' where username = '"+user+"'");
+						
+						height.setText("");
+						//log.info("String buffer is: "+sb.toString());
+						ContentValues init = new ContentValues();
+				    	init.put("personid", recid);
+						init.put("jump_height", distance_best);
+						
+						dbh_person.db.insert("Jump", null, init);
 						Toast.makeText(Jump.this, "Data saved", Toast.LENGTH_SHORT).show();
 						jump_index = 0;
 					}
@@ -126,7 +136,7 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 				// TODO Auto-generated method stub
 				//start accelerrometer
 				height.setText("");
-				String s = "3, 2, 1, Go!";
+				String s = "Attempt "+jump_index+" , Go!";
 			    speak(s);
 				jump_index++;
 				attempt.setText(Integer.toString(jump_index));
@@ -160,8 +170,9 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		}
 		else if(jump_index == 3) {
 			save.setClickable(true);
+			save.setVisibility(View.VISIBLE);
 			if(distance > distance_best) distance_best = distance;
-			best.setText(String.format(".2f", distance_best));
+			best.setText(String.format("%.2f", distance_best));
 		}
 		
 		time = 0;
@@ -205,6 +216,12 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 			}
 		}
 	}
+		@Override
+		protected void onResume() {
+			// TODO Auto-generated method stub
+			super.onResume();
+			if(fname!=null) fname = fname;
+		}
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
@@ -212,6 +229,8 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		mgr.unregisterListener(this);
 		start_flag = false;
 		jump_flag = false;
+		fname = fname;
+		user = user;
 	}
 	@Override
 	protected void onDestroy() {

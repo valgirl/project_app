@@ -162,7 +162,10 @@
         android:layout_alignLeft="@+id/height_total"
         android:layout_alignRight="@+id/height_total"
         android:layout_alignTop="@+id/textView3"
-        android:background="@color/White" />
+        android:background="@color/White"
+        android:paddingLeft="20dp"
+        android:textColor="@color/Black"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/save_jump"

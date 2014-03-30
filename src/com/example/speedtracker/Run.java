@@ -3,7 +3,11 @@ package com.example.speedtracker;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.logging.Logger;
+
+import javax.sound.midi.SysexMessage;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -14,6 +18,7 @@ import com.google.android.gms.location.LocationRequestCreator;
 import com.google.android.gms.maps.*;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,8 +29,13 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.Settings;
+import android.provider.SyncStateContract.Constants;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.DateFormat;
 import android.view.*;
 import android.widget.Button;
 import android.widget.Toast;
@@ -34,30 +44,32 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 
-public class Run extends FragmentActivity implements GpsStatus.Listener, LocationListener, GooglePlayServicesClient.ConnectionCallbacks,
-GooglePlayServicesClient.OnConnectionFailedListener, android.location.LocationListener{
+public class Run extends FragmentActivity implements android.location.LocationListener, OnInitListener{
 
 	Logger log = Logger.getLogger("run");
+	private TextToSpeech tts;
 	private GoogleMap map_view;
 	private LocationManager lm;
 	private android.location.LocationListener ll;
-	private LocationClient location_cl;
-	private Location loc;
+	private Location lastloc;
 	private Button record;
-	private long time;//second
+	private int distance_total;
+	private double time;//second
+	private long time1;
 	private long start_time;
 	private long stop_time;
-	private long scan_time = 60000;
+	private long scan_time = 10000;
 	private boolean st;
-	private boolean database;
-	private Database_Helper dbh;
+	private boolean gps_fixed=false;
+	private Database_Helper dbh_person;
 	private String fname;
-	private StringBuffer sb;
 	private String user;
-	private String jp;
+	private String recid ;
 	 DecimalFormat df;
 	 LatLng myPosition;
-	 LatLng start;
+	//private int count=0;
+	private double previouslat;
+	private double previouslong;
 
 	
 	@Override
@@ -66,23 +78,31 @@ GooglePlayServicesClient.OnConnectionFailedListener, android.location.LocationLi
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.run);
-		dbh = Database_Helper.getInstance();
+		dbh_person = Database_Helper.getInstance();
+		tts = new TextToSpeech(this, this);
 		Intent get_values= getIntent();
 		Bundle myBundle = get_values.getExtras();
-		fname = myBundle.getString("name");
+		//fname = myBundle.getString("name");
 		log.info("Name is: "+fname);
 		user = myBundle.getString("username");
 		log.info("user is: "+user);
-		Cursor s = dbh.db.rawQuery("select * from Person where username = '"+user+"'",null);
-		
-		int index = s.getColumnIndexOrThrow("run");
-		sb = new StringBuffer();
-		s.moveToFirst();
-		if((jp = s.getString(index)) != null){
-			
-			database = true;
+		st = false;
+		distance_total =0;
+		Cursor s = dbh_person.db.rawQuery("select * from Person where username = '"+user+"'",null);
+		int index = s.getColumnIndexOrThrow("recID");
+		if(s.getCount()>0){
+			s.moveToFirst();
+			recid = user;
+		}
+		else{
+			Toast.makeText(Run.this, "No input in database!", Toast.LENGTH_SHORT).show();
 		}
 		
+		Date cuurrentDate = new Date();
+		String s1 = java.text.DateFormat.getDateTimeInstance().format(cuurrentDate);
+		log.info(s1);
+
+		ll = this;
 		lm = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
 		st = false;
 		record = (Button)findViewById(R.id.rec);
@@ -90,68 +110,95 @@ GooglePlayServicesClient.OnConnectionFailedListener, android.location.LocationLi
 		
 		map_view.getUiSettings().setMyLocationButtonEnabled(false);
 		map_view.setMyLocationEnabled(true);
-		if(testPlayServices()) {
-			if(checkInternetConnection()){
-				Toast.makeText(this, "Using network for location", Toast.LENGTH_SHORT).show();
-				location_cl = new LocationClient(this,this,this);
-				location_cl.connect();
-				
+		 lastloc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		 if(lastloc!=null){
+			 myPosition= new LatLng(lastloc.getLatitude(),
+		                lastloc.getLongitude());
+		    
+		 map_view.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition,15));
+		 }
+		 if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+	            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, scan_time, 0,ll );
 			}
-			else {
-			//
-				if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-					ll = this;
-		           // lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, scan_time, 1.0f,ll );
-		            loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		            if(loc != null){
-		            	Toast.makeText(this, "GPS Enabled", Toast.LENGTH_SHORT).show();
-		          	  double latitude; // latitude
-		      	    double longitude; // longitude
-		      	    latitude = loc.getLatitude();
-		            	longitude = loc.getLongitude();
-		            	 LatLng latLng = new LatLng(latitude, longitude);
-		            	 map_view.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
-		            }
-				}
-				else{
-					displayPromptForEnablingGPS();	
-					
-					}
+			else{
+				displayPromptForEnablingGPS();		
 			}
-		}
-		else{
-			Toast.makeText(this, "No Google Play Services", Toast.LENGTH_SHORT).show();
-		}
+		
 		record.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if(st) {
-					stop_time = System.currentTimeMillis();
-					time = (stop_time - start_time);
-					String s = String.format("%.2f",time/1000.0);
-					sb.append("%"+s);
-		 			//sb.append("%"+s3);
-		 			
-		 			dbh.db.execSQL("update Person set run = '"+sb+"' where username = '"+user+"'");
 					st = false;
-					record.setBackgroundResource(R.drawable.record_stop);
+					stop_time = System.currentTimeMillis();
+					record.setBackgroundResource(R.drawable.rec);
+					String s = "Workout Stopped";
+					speak(s);
+					//double latitude = lastloc.getLatitude();	
+			         //double longitude = lastloc.getLongitude();
+			        
+			       // float[] results = new float[3];
+					//Location.distanceBetween(previouslat, previouslong, latitude, longitude, results);
+					//double distance = results[0];
+					//distance_total += distance;
+					log.info(String.valueOf(distance_total));
+					log.info(Double.toString(distance_total));		
+					time1 = (stop_time - start_time);
+					//get seconds
+					int seconds = (int) (time1 / 1000) % 60 ;
+					int minutes = (int) ((time1 / (1000*60)) % 60);
+					int hours   = (int) ((time1 / (1000*60*60)) % 24);
+					float dis = (float)distance_total;
+					float dist = dis/1000;
+					String d = Float.toString(dist);
+					ContentValues init = new ContentValues();
+			    	init.put("personid", recid);
+					init.put("run_time", String.format("%d %d %d",hours,minutes,seconds));
+			    	init.put("data",dist);
+			    	
+					dbh_person.db.insert("Run", null, init);
+					Toast.makeText(Run.this, "Route saved "+String.format("%.2f",dist)+"(km) Time: "+String.format("%d:%d:%d",hours,minutes,seconds), Toast.LENGTH_LONG).show();
+		 			//dbh.db.execSQL("update Run set run = '"+sb+"' where username = '"+user+"'");
+					distance_total =0;
+					//st = false;
+					
 				}
 				else {
-					loc = location_cl.getLastLocation();
-					 double latitude = loc.getLatitude();
+					if(!gps_fixed){
+						Toast.makeText(Run.this, "GPS isn't fixed please wait..", Toast.LENGTH_LONG).show();
+					//	loc = location_cl.getLastLocation();
+					}
+					else{
 						
-			         // Getting longitude of the current location
-			         double longitude = loc.getLongitude();
-			         
-			         LatLng latLng = new LatLng(latitude, longitude);
-			
-			         start = latLng;
-			         start_time = System.currentTimeMillis();
-			         //if(!st) record.setBackgroundResource(R.drawable.record_stop);
-			         record.setBackgroundResource(R.drawable.rec);
-			         st = true;
+						  if(lastloc != null){
+							  start_time = System.currentTimeMillis();							 
+							  record.setBackgroundResource(R.drawable.record_stop);
+							   String s = "Workout Started";
+							speak(s);
+							double latitude = lastloc.getLatitude();	
+				         // Getting longitude of the current location
+				            double longitude = lastloc.getLongitude();
+				            distance_total = 0;
+					        // LatLng latLng = new LatLng(latitude, longitude);
+					
+					         previouslat = latitude;
+					         previouslong = longitude;
+					       // LatLng latLng = new LatLng(latitude, longitude);
+						     
+					        //myPosition = latLng;
+			     
+			 				//map_view.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
+					         start_time = System.currentTimeMillis();
+					         Toast.makeText(Run.this, "Recording", Toast.LENGTH_LONG).show();
+					         //if(!st) record.setBackgroundResource(R.drawable.record_stop);
+					     
+					         st = true;
+						  }
+						  else{
+							  Toast.makeText(Run.this, "GPS isn't fixed please wait..", Toast.LENGTH_LONG).show();
+						  }
+					}
 				}
 				
 		        
@@ -191,7 +238,7 @@ GooglePlayServicesClient.OnConnectionFailedListener, android.location.LocationLi
             if(provider != null){
                 log.info( " Location providers: "+provider);
              //   GpsStatus.Listener lis = this;
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 10,this);
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, scan_time, 0,this);
             }else{
                 //Users did not switch on the GPS
             }
@@ -237,101 +284,73 @@ GooglePlayServicesClient.OnConnectionFailedListener, android.location.LocationLi
 		@Override
 		protected void onStart() {
 			// TODO Auto-generated method stub
-			
-	
 			super.onStart();
 		}
-		@Override
+		/*@Override
 		public void onConnectionFailed(ConnectionResult arg0) {
 			// TODO Auto-generated method stub
 			
-		}
+		}*/
 		@Override
 		protected void onPause() {
 			// TODO Auto-generated method stub
-			//location_cl.removeLocationUpdates(Run.this);
-			//location_cl.disconnect();
+			lm.removeUpdates(this);
 			super.onPause();
 		}
 		@Override
 		protected void onStop() {
 			// TODO Auto-generated method stub
-			location_cl.removeLocationUpdates(this);
-			location_cl.disconnect();
+			lm.removeUpdates(this);
 			super.onStop();
 		}
-		@Override
-		public void onConnected(Bundle arg0) {
-			// TODO Auto-generated method stub
-			Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
-
-			loc = location_cl.getLastLocation();
-			//map_view.getMyLocation();
-			 double latitude = loc.getLatitude();
-	
-	         // Getting longitude of the current location
-	         double longitude = loc.getLongitude();
-	         
-	         LatLng latLng = new LatLng(latitude, longitude);
-	         LocationRequest req = new LocationRequest();
-	         req.setPriority(LocationRequest.PRIORITY_LOW_POWER);
-	         req.setFastestInterval(scan_time);
-	         req.setInterval(scan_time);
-	         location_cl.requestLocationUpdates(req, Run.this);
-	         myPosition = latLng;
-	
-	        map_view.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
-	       
-			
+		public void speak(String message){
+			tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+			while(tts.isSpeaking()){
+				//log.info("TTS is speaking");
+			}
 		}
-	
-	@Override
-	public void onDisconnected() {
-		// TODO Auto-generated method stub
-		Toast.makeText(this, "Disconnected", Toast.LENGTH_SHORT).show();
-		location_cl.disconnect();
-		lm.removeGpsStatusListener((Listener) ll);
-		lm.removeUpdates(ll);
-	}
 	@Override
 	public void onLocationChanged(Location loca) {
 		// TODO Auto-generated method stub
-		 double latitude = loca.getLatitude();
-		
-         // Getting longitude of the current location
-         double longitude = loca.getLongitude();
-         if(database){
-        	sb.append(jp);
-        	
- 			String s1 = String.format("%.2f",longitude);
- 			String s2 = String.format("%.2f", longitude);
- 			//String s3 = String.format("%.2f",time);
- 			sb.append("%"+s1);
- 			sb.append("%"+s2);
- 			//sb.append("%"+s3);
- 			
- 			dbh.db.execSQL("update Person set run = '"+sb+"' where username = '"+user+"'");
- 			log.info("IN location changed "+sb.toString());
-			Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT).show();
-         }
-         else{
-        	 Toast.makeText(this, "Location changed no database pointer", Toast.LENGTH_SHORT).show();
-         }
-         LatLng latLng = new LatLng(latitude, longitude);
-         
-         myPosition = latLng;
-         
-        map_view.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
+		if(loca == null){
+			Toast.makeText(this, "No location fixed! Please wait..", Toast.LENGTH_SHORT).show();
+			gps_fixed = false;
+		}
+		else{
+			gps_fixed = true;
+			//mLastLocationMillis = SystemClock.elapsedRealtime();
+			lastloc = loca;
+	       if(st){
+	    	   
+				double latitude = loca.getLatitude();
+		         // Getting longitude of the current location
+		         double longitude = loca.getLongitude();
+		         float[] results = new float[1];
+				Location.distanceBetween(previouslat, previouslong, latitude, longitude, results);
+				int distance = (int)results[0];
+				distance_total += distance;
+		    	Toast.makeText(this, "Distance "+distance +"/ndistotal: "+distance_total, Toast.LENGTH_LONG).show();
+		    	previouslat = latitude;
+		    	previouslong = longitude;
+		    	 LatLng latLng = new LatLng(latitude, longitude);
+			     
+			        //myPosition = latLng;
+	     
+	 				map_view.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
+	       }
+	 			
+	 		//	count++;
+		}
 	}
 	@Override
 	public void onProviderDisabled(String provider) {
 		// TODO Auto-generated method stub
-		
+		Toast.makeText(this, "GPS Disabled", Toast.LENGTH_SHORT).show();
 	}
 	@Override
 	public void onProviderEnabled(String provider) {
 		// TODO Auto-generated method stub
-		
+		Toast.makeText(this, "GPS Enabled", Toast.LENGTH_SHORT).show();
 	}
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -339,18 +358,14 @@ GooglePlayServicesClient.OnConnectionFailedListener, android.location.LocationLi
 		
 	}
 	@Override
-	public void onGpsStatusChanged(int event) {
+	public void onInit(int status) {
 		// TODO Auto-generated method stub
-		switch (event) {
-        case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-          
+		if (status == TextToSpeech.SUCCESS) {
+			log.info("TTS Initialised");
 
-            break;
-        case GpsStatus.GPS_EVENT_FIRST_FIX:
-            // Do something.
-        	Toast.makeText(this, "GPS Fixed", Toast.LENGTH_SHORT).show();
-
-            break;
+		} else {
+			log.info("TTS, Initilization Failed!");
 		}
-	}	
+		
+	}
 }
