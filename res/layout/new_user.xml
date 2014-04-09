@@ -18,8 +18,8 @@
         android:id="@+id/fst_name_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView6"
-        android:layout_below="@+id/textView6"
+        android:layout_alignRight="@+id/run_values"
+        android:layout_below="@+id/run_values"
         android:layout_marginTop="65dp"
         android:text="@string/age"
         android:textSize="20sp" />
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/Logged_in_person"
-        android:layout_alignRight="@+id/textView6"
+        android:layout_alignRight="@+id/run_values"
         android:layout_below="@+id/Logged_in_person"
         android:layout_marginTop="20dp"
         android:text="@string/lname"
@@ -67,12 +67,12 @@
         android:layout_above="@+id/password"
         android:layout_alignLeft="@+id/lname"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/textView6"
+        android:layout_alignTop="@+id/run_values"
         android:ems="10"
         android:inputType="textPersonName|textVisiblePassword" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/run_values"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/Logged_in_person"
@@ -87,16 +87,16 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/age"
         android:layout_alignLeft="@+id/user_Name"
-        android:layout_alignTop="@+id/textView7"
+        android:layout_alignTop="@+id/jog_values"
         android:ems="10"
         android:inputType="textPassword" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/jog_values"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/user_speed"
-        android:layout_below="@+id/textView6"
+        android:layout_below="@+id/run_values"
         android:layout_marginTop="21dp"
         android:text="@string/pass"
         android:textSize="20sp" />
@@ -127,12 +127,12 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/height"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/textView5"
+        android:layout_alignTop="@+id/walk_values"
         android:ems="10"
         android:inputType="number|phone" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/walk_values"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/user_speed"
@@ -155,7 +155,7 @@
         android:id="@+id/fname_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView5"
+        android:layout_alignRight="@+id/walk_values"
         android:layout_below="@+id/weight"
         android:text="@string/coach"
         android:textSize="20sp" />

@@ -110,7 +110,7 @@ public class Create_User extends Activity {
 					
 		get = getIntent();
 		Bundle myBundle = get.getExtras();
-		user_Name = myBundle.getString("username");
+		user_Name = myBundle.getString("usern");
 		log.info("user is "+user_Name);
 		dbh_person = Database_Helper.getInstance();
 		log = Logger.getLogger("Create User");
@@ -180,7 +180,7 @@ public class Create_User extends Activity {
 				in_lname = lname.getText().toString().trim();
 				in_user = user_name.getText().toString().trim();
 				in_pass = pass.getText().toString().trim();
-				
+				user_Name = in_user;
 				String w =  weight.getText().toString();
 				if(w.isEmpty()) in_weight = 0;
 				else in_weight = Float.parseFloat(w);

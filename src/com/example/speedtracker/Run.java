@@ -1,20 +1,12 @@
 package com.example.speedtracker;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import javax.sound.midi.SysexMessage;
-
+import com.google.android.gms.*;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationRequestCreator;
 import com.google.android.gms.maps.*;
 
 import android.app.AlertDialog;
@@ -23,6 +15,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.GpsStatus.Listener;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -44,7 +40,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 
-public class Run extends FragmentActivity implements android.location.LocationListener, OnInitListener{
+public class Run extends FragmentActivity implements android.location.LocationListener, SensorEventListener,OnInitListener{
 
 	Logger log = Logger.getLogger("run");
 	private TextToSpeech tts;
@@ -62,6 +58,7 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 	private boolean st;
 	private boolean gps_fixed=false;
 	private Database_Helper dbh_person;
+	private boolean step_flag;
 	private String fname;
 	private String user;
 	private String recid ;
@@ -70,6 +67,11 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 	//private int count=0;
 	private double previouslat;
 	private double previouslong;
+	private SensorManager mgr;
+	private int step_count;
+	private int debounce;
+	private Sensor accel;
+	private  SensorEventListener event_listener;
 
 	
 	@Override
@@ -88,6 +90,9 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 		log.info("user is: "+user);
 		st = false;
 		distance_total =0;
+		step_flag=false;
+		debounce = 0;
+		step_count=0;
 		Cursor s = dbh_person.db.rawQuery("select * from Person where username = '"+user+"'",null);
 		int index = s.getColumnIndexOrThrow("recID");
 		if(s.getCount()>0){
@@ -103,6 +108,9 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 		log.info(s1);
 
 		ll = this;
+	    mgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+	       accel = mgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+	       event_listener = this;
 		lm = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
 		st = false;
 		record = (Button)findViewById(R.id.rec);
@@ -115,7 +123,7 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 			 myPosition= new LatLng(lastloc.getLatitude(),
 		                lastloc.getLongitude());
 		    
-		 map_view.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition,15));
+		 map_view.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition,10));
 		 }
 		 if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 	            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, scan_time, 0,ll );
@@ -131,34 +139,34 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 				// TODO Auto-generated method stub
 				if(st) {
 					st = false;
+					mgr.unregisterListener(event_listener);
 					stop_time = System.currentTimeMillis();
 					record.setBackgroundResource(R.drawable.rec);
 					String s = "Workout Stopped";
 					speak(s);
-					//double latitude = lastloc.getLatitude();	
-			         //double longitude = lastloc.getLongitude();
-			        
-			       // float[] results = new float[3];
-					//Location.distanceBetween(previouslat, previouslong, latitude, longitude, results);
-					//double distance = results[0];
-					//distance_total += distance;
+					int c = step_count;
 					log.info(String.valueOf(distance_total));
 					log.info(Double.toString(distance_total));		
 					time1 = (stop_time - start_time);
+					//get minutes
+					float mins = time1/1000; 
+					int steps_per_min = (int)( c/mins);
 					//get seconds
 					int seconds = (int) (time1 / 1000) % 60 ;
 					int minutes = (int) ((time1 / (1000*60)) % 60);
 					int hours   = (int) ((time1 / (1000*60*60)) % 24);
 					float dis = (float)distance_total;
 					float dist = dis/1000;
+					float av_pace = time1/dist;
 					String d = Float.toString(dist);
 					ContentValues init = new ContentValues();
 			    	init.put("personid", recid);
 					init.put("run_time", String.format("%d %d %d",hours,minutes,seconds));
 			    	init.put("data",dist);
-			    	
+			    	init.put("pace", av_pace);
+			    	init.put("steps",steps_per_min);
 					dbh_person.db.insert("Run", null, init);
-					Toast.makeText(Run.this, "Route saved "+String.format("%.2f",dist)+"(km) Time: "+String.format("%d:%d:%d",hours,minutes,seconds), Toast.LENGTH_LONG).show();
+					Toast.makeText(Run.this, "Route saved "+String.format("%.2f",dist)+"(km) Time: "+String.format("%d:%d:%d",hours,minutes,seconds+"steps per min "+String.format("%d", steps_per_min)+ "Pace: "+String.format("%.2f",av_pace)), Toast.LENGTH_LONG).show();
 		 			//dbh.db.execSQL("update Run set run = '"+sb+"' where username = '"+user+"'");
 					distance_total =0;
 					//st = false;
@@ -192,8 +200,9 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 					         start_time = System.currentTimeMillis();
 					         Toast.makeText(Run.this, "Recording", Toast.LENGTH_LONG).show();
 					         //if(!st) record.setBackgroundResource(R.drawable.record_stop);
-					     
+					         mgr.registerListener(event_listener, accel, SensorManager.SENSOR_DELAY_FASTEST);
 					         st = true;
+					     
 						  }
 						  else{
 							  Toast.makeText(Run.this, "GPS isn't fixed please wait..", Toast.LENGTH_LONG).show();
@@ -367,5 +376,32 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 			log.info("TTS, Initilization Failed!");
 		}
 		
+	}
+	@Override
+	public void onAccuracyChanged(Sensor arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		// TODO Auto-generated method stub
+		float y = event.values[1];
+		if(step_flag){
+			if(debounce ==0){
+				if(y<6){
+				step_flag=false;
+				}
+			}
+			else{
+				debounce--;
+			}
+		}
+		else {
+			if(y>12){
+			step_count++;			
+			step_flag=true;
+			debounce = 30;
+			}
+		}
 	}
 }

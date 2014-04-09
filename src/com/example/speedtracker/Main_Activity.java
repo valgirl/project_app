@@ -1,10 +1,6 @@
 package com.example.speedtracker;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,36 +11,25 @@ import javax.sql.rowset.JdbcRowSet;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.*;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.apache.http.params.*;
+import org.json.*;
 
 import com.example.speedtracker.R.color;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
+import android.os.*;
+import android.app.*;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 
 public class Main_Activity extends Activity  {
 
@@ -56,10 +41,12 @@ public class Main_Activity extends Activity  {
 	private Button logout;
 	private Button create;
 	private Button sync;
+	private Button calib;
 	private ProgressDialog progress;
 	private Button help;
 	String userName="";
 	private String person_name;
+	private String coach_user;
 //	private String passWord;
 	private Cursor myCursor;
 	private Database_Helper dbh;
@@ -89,6 +76,7 @@ public class Main_Activity extends Activity  {
 		login = (Button)findViewById(R.id.login);
 		logout = (Button)findViewById(R.id.logout);
 		create = (Button)findViewById(R.id.create_user);
+		calib = (Button)findViewById(R.id.cal);
 		
 		dbh = new Database_Helper("people_speed.db",getApplicationContext());
 		log = Logger.getLogger("Main");
@@ -97,6 +85,8 @@ public class Main_Activity extends Activity  {
 		logout.setBackgroundColor(color.gray);
 		sync.setClickable(false);
 		sync.setBackgroundColor(color.gray);
+		
+		coach_user = "";
 		
 		myprefs = getSharedPreferences(MYPREFS, mode);
 		if (myprefs != null && 
@@ -120,6 +110,27 @@ public class Main_Activity extends Activity  {
 			person_name = "";
 			userName=""; 
 		}
+		
+		calib.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				log.info("in calib");
+				Intent inten = new Intent(Main_Activity.this, Calibrate.class);
+				if(userName.isEmpty()){
+					Toast.makeText(Main_Activity.this, "You need to login first!", Toast.LENGTH_LONG).show();
+				}
+				else {
+					Bundle myBundle = new Bundle();
+					myBundle.putString("name",person_name);
+					myBundle.putString("username", userName);
+					inten.putExtras(myBundle);
+					startActivity(inten);
+				}
+			}
+		});
+		
 		help.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -137,7 +148,7 @@ public class Main_Activity extends Activity  {
 				
 				//get the rec id from the person data
 				Cursor s = dbh.db.rawQuery("select * from Person where username = '"+userName+"'",null);
-				int index = s.getColumnIndexOrThrow("recID");
+				int index = s.getColumnIndexOrThrow("username");
 				if(s.getCount()>0){
 					s.moveToFirst();
 					recid = s.getString(index);
@@ -162,7 +173,7 @@ public class Main_Activity extends Activity  {
 				}
 				else {
 					Bundle myBundle = new Bundle();
-					//myBundle.putString("name",person_name);
+					myBundle.putString("name",person_name);
 					myBundle.putString("username", userName);
 					inten.putExtras(myBundle);
 					startActivity(inten);
@@ -266,13 +277,13 @@ public class Main_Activity extends Activity  {
 		// TODO Auto-generated method stub
 				Intent inten = new Intent(Main_Activity.this, Create_User.class);
 				Bundle myBundle = new Bundle();
-				if(userName.isEmpty()) userName="";
-				
-					myBundle.putString("username", userName);
-					inten.putExtras(myBundle);
-					startActivityForResult(inten, 234);
-				
-
+				log.info("in create coach user is: "+coach_user);
+				if(coach_user.isEmpty()) {
+					coach_user="";
+				}
+				myBundle.putString("usern", coach_user);
+				inten.putExtras(myBundle);
+				startActivityForResult(inten, 234);
 				}
 			});
 		
@@ -360,8 +371,8 @@ public class Main_Activity extends Activity  {
 	                sync.setClickable(true);
 	                 sync.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
 				//person_name = received.getString("name");
-				userName = received.getString("user");
-				log.info("person name is: "+person_name);
+				coach_user = received.getString("user");
+				log.info("person name is: "+coach_user);
 					
 			
 				// }
@@ -444,12 +455,70 @@ public class Main_Activity extends Activity  {
 		return jsa.toString();
 		
 	}
-	private String get_SpeedData(){
+	private String get_BeepData(){
 		
-		return MYPREFS;
+	myCursor = dbh.db.rawQuery("select * from Beep where personid = '"+recid+"'",null);
+		System.out.println("personid is: "+recid);
+		int timecol = myCursor.getColumnIndex("Timestamp");
+		int sp1col = myCursor.getColumnIndex("split1");
+		int sp2col = myCursor.getColumnIndex("split2");
+		int sp3col = myCursor.getColumnIndex("split3");
+		int sp4col = myCursor.getColumnIndex("split4");
+		int sp5col = myCursor.getColumnIndex("split5");
+		int sp6col = myCursor.getColumnIndex("split6");
+		int sp7col = myCursor.getColumnIndex("split7");
+		int sp8col = myCursor.getColumnIndex("split8");
+		int sp9col = myCursor.getColumnIndex("split9");
+		int sp10col = myCursor.getColumnIndex("split10");
+		int totcol = myCursor.getColumnIndex("total_time");
+		int count = myCursor.getCount();
+		JSONArray jsa = new JSONArray();
+		if(myCursor.getCount() > 0){
+			myCursor.moveToFirst();
+		}
+		
+		for (int i = 0; i < count; i++) {
+
+			Timestamp ts = Timestamp.valueOf(myCursor.getString(timecol));
+			float spl1 = myCursor.getFloat(sp1col);
+			float spl2 = myCursor.getFloat(sp2col);
+			float spl3 = myCursor.getFloat(sp3col);
+			float spl4 = myCursor.getFloat(sp4col);
+			float spl5 = myCursor.getFloat(sp5col);
+			float spl6 = myCursor.getFloat(sp6col);
+			float spl7 = myCursor.getFloat(sp7col);
+			float spl8 = myCursor.getFloat(sp8col);
+			float spl9 = myCursor.getFloat(sp9col);
+			float spl10 = myCursor.getFloat(sp10col);
+			float tot_time = myCursor.getFloat(totcol);
+			JSONObject js = new JSONObject();
+			try {
+				js.put("timestamp", ts);
+				js.put("id", recid);
+				js.put("split1", spl1);
+				js.put("split2", spl2);
+				js.put("split3", spl3);
+				js.put("split4", spl4);
+				js.put("split5", spl5);
+				js.put("split6", spl6);
+				js.put("split7", spl7);
+				js.put("split8", spl8);
+				js.put("split9", spl9);
+				js.put("split10", spl10);
+				js.put("total_time", tot_time);
+				jsa.put(i, js);
+				myCursor.moveToNext();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				log.info("Json exception "+e.getMessage());
+			}	
+		}	
+		return jsa.toString();
+		
 		
 	}
-	private String get_BeepData(){
+	private String get_SpeedData(){
 		
 		return MYPREFS;
 		
@@ -565,8 +634,9 @@ public class Main_Activity extends Activity  {
 		//String s = urls[0];	
 	  	 String user = get_UserData();
 	 	 String jump = get_JumpData();
+	 	 String beep = get_BeepData();
 	 	 String run = get_RunData();
-		 log.info("In connection "+user+" "+jump+ " "+run);
+		 log.info("In connection " +beep);
 		String url = "http://SERVER/sync_sql.php";
 		StringBuffer sb = new StringBuffer();
 		DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -580,6 +650,7 @@ public class Main_Activity extends Activity  {
 			params.add(new BasicNameValuePair("userdata", user)); 
 			params.add(new BasicNameValuePair("jump_data", jump));
 			params.add(new BasicNameValuePair("run_data", run));
+			params.add(new BasicNameValuePair("beep_data", beep));
 				httppost.setEntity(new UrlEncodedFormEntity(params));
 				response = httpclient.execute(httppost);
 				log.info("Sent String ");

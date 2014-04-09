@@ -6,89 +6,6 @@
     android:paddingRight="20dp"
     android:paddingTop="0dp" >
 
-   <Button
-       android:id="@+id/create_user"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_alignLeft="@+id/login"
-       android:layout_alignRight="@+id/login"
-       android:layout_below="@+id/login"
-       android:layout_marginTop="5dp"
-       android:background="@color/CornflowerBlue"
-       android:height="30dp"
-       android:paddingLeft="0dp"
-       android:paddingTop="0dp"
-       android:text="@string/create"
-       android:textColor="@color/Black"
-       android:textColorHint="@color/Black"
-       android:textSize="15sp"
-       android:textStyle="italic"
-       android:typeface="serif" />
-
-          <Button
-              android:id="@+id/speed"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignLeft="@+id/beep"
-              android:layout_alignTop="@+id/jump"
-              android:background="@color/CornflowerBlue"
-              android:drawableTop="@drawable/speed"
-              android:text="@string/speed" />
-
-          <Button
-              android:id="@+id/beep"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignBaseline="@+id/run"
-              android:layout_alignBottom="@+id/run"
-              android:layout_alignRight="@+id/create_user"
-              android:layout_marginRight="25dp"
-              android:background="@color/CornflowerBlue"
-              android:drawableTop="@drawable/shuttle"
-              android:text="@string/beep" />
-
-          <Button
-              android:id="@+id/jump"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignLeft="@+id/run"
-              android:layout_alignRight="@+id/run"
-              android:layout_below="@+id/run"
-              android:layout_marginTop="39dp"
-              android:background="@color/CornflowerBlue"
-              android:drawableTop="@drawable/jump1"
-              android:text="@string/jump" />
-
-          <Button
-              android:id="@+id/login"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentLeft="true"
-              android:layout_alignParentRight="true"
-              android:layout_alignParentTop="true"
-              android:layout_marginTop="5dp"
-              android:background="@color/CornflowerBlue"
-              android:height="30dp"
-              android:paddingLeft="0dp"
-              android:text="@string/login"
-              android:textColor="@color/Black"
-              android:textColorHint="@color/Black"
-              android:textSize="15sp"
-              android:textStyle="italic"
-              android:typeface="serif" />
-
-          <Button
-              android:id="@+id/run"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignLeft="@+id/create_user"
-              android:layout_below="@+id/create_user"
-              android:layout_marginLeft="32dp"
-              android:layout_marginTop="34dp"
-              android:background="@color/CornflowerBlue"
-              android:drawableTop="@drawable/running"
-              android:text="@string/record" />
-
           <Button
               android:id="@+id/logout"
               android:layout_width="wrap_content"
@@ -105,21 +22,100 @@
               android:width="60dp" />
 
           <Button
-              android:id="@+id/hlp"
-              style="?android:attr/buttonStyleSmall"
+              android:id="@+id/jump"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_alignBaseline="@+id/syn"
-              android:layout_alignBottom="@+id/syn"
-              android:layout_alignRight="@+id/speed"
+              android:layout_alignLeft="@+id/run"
+              android:layout_below="@+id/run"
+              android:layout_marginTop="23dp"
+              android:background="@color/DarkCyan"
+              android:drawableTop="@drawable/jump1"
+              android:text="@string/jump" />
+
+          <Button
+              android:id="@+id/speed"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_above="@+id/logout"
+              android:layout_alignLeft="@+id/beep"
+              android:background="@color/DarkCyan"
+              android:drawableTop="@drawable/speed"
+              android:text="@string/speed" />
+
+          <Button
+              android:id="@+id/create_user"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_alignParentRight="true"
+              android:layout_alignParentTop="true"
+              android:layout_marginTop="19dp"
               android:background="@color/CornflowerBlue"
               android:height="30dp"
-              android:text="@string/help"
+              android:paddingLeft="0dp"
+              android:paddingTop="0dp"
+              android:text="@string/create"
+              android:textColor="@color/Black"
+              android:textColorHint="@color/Black"
+              android:textSize="15sp"
+              android:textStyle="italic"
+              android:typeface="serif" />
+
+          <Button
+              android:id="@+id/cal"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_above="@+id/run"
+              android:layout_alignRight="@+id/hlp"
+              android:background="@color/CornflowerBlue"
+              android:height="30dp"
+              android:text="@string/cal"
               android:textColor="@color/Black"
               android:textSize="15sp"
               android:textStyle="italic"
               android:typeface="serif"
-              android:width="60dp" />
+              android:width="100dp" />
+
+          <Button
+              android:id="@+id/beep"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignBaseline="@+id/run"
+              android:layout_alignBottom="@+id/run"
+              android:layout_alignLeft="@+id/cal"
+              android:background="@color/DarkCyan"
+              android:drawableTop="@drawable/shuttle"
+              android:text="@string/beep" />
+
+          <Button
+              android:id="@+id/login"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignLeft="@+id/run"
+              android:layout_below="@+id/create_user"
+              android:layout_marginTop="20dp"
+              android:background="@color/CornflowerBlue"
+              android:height="30dp"
+              android:paddingLeft="0dp"
+              android:text="@string/login"
+              android:textColor="@color/Black"
+              android:textColorHint="@color/Black"
+              android:textSize="15sp"
+              android:textStyle="italic"
+              android:typeface="serif"
+              android:width="100dp" />
+
+          <Button
+              android:id="@+id/run"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/login"
+              android:layout_marginRight="32dp"
+              android:layout_marginTop="32dp"
+              android:layout_toLeftOf="@+id/beep"
+              android:background="@color/DarkCyan"
+              android:drawableTop="@drawable/running"
+              android:text="@string/record" />
 
           <Button
               android:id="@+id/syn"
@@ -132,6 +128,24 @@
               android:background="@color/CornflowerBlue"
               android:height="30dp"
               android:text="@string/sync"
+              android:textColor="@color/Black"
+              android:textSize="15sp"
+              android:textStyle="italic"
+              android:typeface="serif"
+              android:width="60dp" />
+
+          <Button
+              android:id="@+id/hlp"
+              style="?android:attr/buttonStyleSmall"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignBaseline="@+id/syn"
+              android:layout_alignBottom="@+id/syn"
+              android:layout_marginLeft="22dp"
+              android:layout_toRightOf="@+id/syn"
+              android:background="@color/CornflowerBlue"
+              android:height="30dp"
+              android:text="@string/help"
               android:textColor="@color/Black"
               android:textSize="15sp"
               android:textStyle="italic"

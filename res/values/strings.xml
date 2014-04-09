@@ -14,6 +14,7 @@
 	<string name="create_user">Create</string>
 	<string name="logout">Logout</string>
 	<string name="sync">Sync</string>
+	<string name="cal">Calibrate</string>
 		
       
      		  <!--  createpage strings -->   
@@ -33,6 +34,18 @@
 	<string name="coach_name">Coach Name:</string>
 	<string name="set">Set Coach</string>
 	
+				
+				<!--  calibrate strings -->
+				
+				<string name="walk">Walk:</string>
+				<string name="jog">Jog:</string>
+				<string name="run">Run:</string>
+				<string name="stop">Stop</string>
+				<string name="info">To calibrate the app you must set out a lane of 20m and complete it at different speeds(Walk, Jog, Run). 
+				     When your ready press the relevant button, you will be alerted
+				    when the test will begin. When you reach the end of the lane you must press stop. Repeat for the 3 
+				    speeds.</string>	
+				
 				
 				<!--  jump strings -->
 				
@@ -72,6 +85,7 @@
 		<string name="split9">Split 9:</string>
 		<string name="split10">Split 10:</string>
 		<string name="totaltime">Total Time:</string>
+		<string name="attempts">No of Laps\n (Less than 10):</string>
 		  
                 <!--  help documents -->
                 
@@ -101,10 +115,11 @@
                       run to the second cone, back to the start and so on until the timer sounds. If each interval is completed they will have run a total distance of 150 metres.
                        The goal is to complete all intervals in 30 seconds.</string>
          
-          <string name="beep_help">Layout a 20 metre lane. Press the start button. A beep will sound indicating to start.
-               You must reach the line on either end before the next beep 
-              sounds. The beeps will get shorter and shorter as the test proceeds.</string>
+          <string name="beep_help">Set a lane with whatever distance you require. Press the start button. A pop up box will appear
+              asking you how many laps you want to do. e.g.100m lane by 10 laps is a total of 1km.
+              Press start when finished.The app will recored your time for each lap and display it when you finish.
+              A button will then pop up to save your data.</string>
                       
-          <string name="sync_help">To upload all your information to the website you must press the sync button.
+          <string name="sync_help">To upload all your information to the website you must press the sync button. You must have an internet connection to do this.
               This will upload all your results to the website.</string>
 </resources>

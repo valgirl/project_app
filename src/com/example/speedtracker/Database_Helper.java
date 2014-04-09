@@ -95,6 +95,7 @@ public class Database_Helper {
 			        + " age INTEGER, " 
 			        + " weight REAL, " 
 			        + " height REAL, " 
+			        + " step_distance REAL, " 
 			        + " coach text );"); 
 			      
 			//create run table
@@ -103,6 +104,8 @@ public class Database_Helper {
 						+ " Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,"
 						+ " run_time TEXT,"
 						+ " data REAL,"
+						+ " pace REAL,"
+						+ " steps REAL,"
 						+ " personid TEXT );"); 
 				
 				//create jump table
@@ -116,7 +119,13 @@ public class Database_Helper {
 				db.execSQL("create table if not exists Speed ("
 						+ " recID INTEGER PRIMARY KEY autoincrement, " 
 						+ " Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,"
-						+ " distance REAL,"
+						+ " distance1 REAL,"
+						+ " distance2 REAL,"
+						+ " distance3 REAL,"
+						+ " distance4 REAL,"
+						+ " distance5 REAL,"
+						+ " distance6 REAL,"
+						+ " distance_total REAL,"
 						+ " personid TEXT );"); 
 				
 				//create beeptest table

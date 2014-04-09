@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:height="150dp"
+        android:paddingLeft="10dp"
+        android:text="@string/info"
+        android:textColor="@color/Beige"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/cal_walk_strt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView1"
+        android:layout_marginLeft="22dp"
+        android:layout_toRightOf="@+id/textView1"
+        android:background="@color/Beige"
+        android:height="40dp"
+        android:text="@string/start"
+        android:width="80dp" />
+
+    <Button
+        android:id="@+id/cal_walk_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cal_walk_strt"
+        android:layout_alignTop="@+id/cal_walk_strt"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/cal_walk_strt"
+        android:background="@color/CadetBlue"
+        android:text="@string/stop"
+        android:width="80dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textView1"
+        android:layout_below="@+id/cal_walk_strt"
+        android:layout_marginTop="33dp"
+        android:text="@string/jog"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/cal_jog_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_toLeftOf="@+id/cal_walk_stop"
+        android:background="@color/Beige"
+        android:height="40dp"
+        android:text="@string/start"
+        android:width="80dp" />
+
+    <Button
+        android:id="@+id/cal_run_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_toLeftOf="@+id/cal_walk_stop"
+        android:background="@color/Beige"
+        android:height="40dp"
+        android:text="@string/start"
+        android:width="80dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cal_jog_start"
+        android:layout_marginTop="29dp"
+        android:layout_toLeftOf="@+id/cal_walk_strt"
+        android:text="@string/run"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView4"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/walk"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/jog_values"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/walk_values"
+        android:layout_alignRight="@+id/cal_run_start"
+        android:layout_alignTop="@+id/walk_values"
+        android:background="@color/white"
+        android:height="40dp"
+        android:textColor="@color/black"
+        android:width="60dp" />
+
+    <TextView
+        android:id="@+id/run_values"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/jog_values"
+        android:layout_alignRight="@+id/cal_jog_stop"
+        android:layout_alignTop="@+id/jog_values"
+        android:background="@color/white"
+        android:height="40dp"
+        android:textColor="@color/black"
+        android:width="60dp" />
+
+    <TextView
+        android:id="@+id/walk_values"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:background="@color/white"
+        android:height="30dp"
+        android:textColor="@color/black"
+        android:width="60dp" />
+
+    <Button
+        android:id="@+id/cal_jog_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView2"
+        android:layout_alignLeft="@+id/cal_walk_stop"
+        android:layout_alignTop="@+id/cal_jog_start"
+        android:background="@color/CadetBlue"
+        android:text="@string/stop"
+        android:width="80dp" />
+
+    <Button
+        android:id="@+id/cal_run_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cal_run_start"
+        android:layout_alignRight="@+id/run_values"
+        android:layout_alignTop="@+id/cal_run_start"
+        android:background="@color/CadetBlue"
+        android:text="@string/stop"
+        android:width="80dp" />
+
+</RelativeLayout>
