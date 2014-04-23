@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/steps_per_min_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -20,9 +20,9 @@
         android:id="@+id/cal_walk_strt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView1"
+        android:layout_alignTop="@+id/distance_run_txt"
         android:layout_marginLeft="22dp"
-        android:layout_toRightOf="@+id/textView1"
+        android:layout_toRightOf="@+id/distance_run_txt"
         android:background="@color/Beige"
         android:height="40dp"
         android:text="@string/start"
@@ -41,10 +41,10 @@
         android:width="80dp" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/pace_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView1"
+        android:layout_alignRight="@+id/distance_run_txt"
         android:layout_below="@+id/cal_walk_strt"
         android:layout_marginTop="33dp"
         android:text="@string/jog"
@@ -55,7 +55,7 @@
         android:id="@+id/cal_jog_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView3"
+        android:layout_alignTop="@+id/pace_txt"
         android:layout_toLeftOf="@+id/cal_walk_stop"
         android:background="@color/Beige"
         android:height="40dp"
@@ -66,7 +66,7 @@
         android:id="@+id/cal_run_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView2"
+        android:layout_alignTop="@+id/time_txt_run"
         android:layout_toLeftOf="@+id/cal_walk_stop"
         android:background="@color/Beige"
         android:height="40dp"
@@ -74,7 +74,7 @@
         android:width="80dp" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/time_txt_run"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cal_jog_start"
@@ -85,11 +85,11 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/distance_run_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView4"
+        android:layout_below="@+id/steps_per_min_txt"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="25dp"
         android:text="@string/walk"
@@ -124,7 +124,7 @@
         android:id="@+id/walk_values"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignLeft="@+id/distance_run_txt"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="40dp"
         android:background="@color/white"
@@ -136,7 +136,7 @@
         android:id="@+id/cal_jog_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
+        android:layout_above="@+id/time_txt_run"
         android:layout_alignLeft="@+id/cal_walk_stop"
         android:layout_alignTop="@+id/cal_jog_start"
         android:background="@color/CadetBlue"

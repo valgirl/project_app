@@ -4,10 +4,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Logger;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteException;
@@ -16,6 +19,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.media.ToneGenerator;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
@@ -35,11 +44,14 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 	private Sensor accel;
 	private  SensorEventListener event_listener;
 	private Logger log;
-	private TextView height;
-	private TextView attempt;
+	private TextView height1;
+	private TextView height2;
+	private TextView height3;
 	private TextView best;
 	private Button save;
 	private float min;
+	private float velocity;
+	private double dist_save;
 	private boolean jump_flag=false;
 	private boolean start_flag = false;
 	private long start_time;
@@ -47,8 +59,19 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 	private long time;
 	private double distance;
 	private int jump_index;
+	private int save_jump;
 	private String recid;
 	private double distance_best;
+	private float dist_best_save;
+	private TextView nme;
+	private TextView usern ;
+	private ToneGenerator toneG;
+	private double acc = -9.81d;
+	SharedPreferences myprefs;
+	SharedPreferences.Editor myEditor;
+	final int mode = Activity.MODE_PRIVATE; 
+	final String MYPREFS = "MyPreferences_002";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -62,13 +85,13 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		log.info("Name is: "+fname);
 		user = myBundle.getString("username");
 		log.info("user is: "+user);
-		
+		velocity =0;
 		tts = new TextToSpeech(this, this);
 		mgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 	       accel = mgr.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 	       event_listener = this;
 	
-		
+	    toneG = new ToneGenerator(AudioManager.STREAM_NOTIFICATION,100);
 		myCursor = dbh_person.db.rawQuery("select * from Person where username = '"+user+"'",null);
 	
 		//int index = myCursor.getColumnIndexOrThrow("recID");
@@ -81,16 +104,17 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		}
 		
 		min = 0;
-		jump_index = 0;
 		
 		best = (TextView)findViewById(R.id.best_jp);
-		height = (TextView)findViewById(R.id.height_total);
-		attempt = (TextView)findViewById(R.id.attempt_view);
+		height1 = (TextView)findViewById(R.id.attempt_view);
+		height2 = (TextView)findViewById(R.id.attem2_jump);
+		height3 = (TextView)findViewById(R.id.attem3_jump);
 		
-		TextView nme = (TextView)findViewById(R.id.fname_jump);
-		TextView usern = (TextView)findViewById(R.id.us_name_jump);
+		nme = (TextView)findViewById(R.id.fname_jump);
+		usern = (TextView)findViewById(R.id.us_name_jump);
 		nme.setText(fname);
 		usern.setText(user);
+		
 		
 		save = (Button)findViewById(R.id.save_jump);
 		save.setClickable(false);
@@ -103,7 +127,6 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 				try{
 					if(jump_index == 3){
 						
-						height.setText("");
 						//log.info("String buffer is: "+sb.toString());
 						ContentValues init = new ContentValues();
 				    	init.put("personid", recid);
@@ -135,12 +158,21 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//start accelerrometer
-				height.setText("");
-				String s = "Attempt "+jump_index+" , Go!";
+				jump_index=0;
+				height1.setText("");
+				height2.setText("");
+				height3.setText("");
+				int at = jump_index+1;
+				String s1 = "Attempt "+at;
+				speak(s1);
+				String s = "5, 4, 3, 2, 1.";
 			    speak(s);
+			    toneG.startTone(ToneGenerator.TONE_SUP_ERROR,1000); 
+			    velocity = 0;
+			    min = 0;
+				mgr.registerListener(event_listener, accel, SensorManager.SENSOR_DELAY_FASTEST);
 				jump_index++;
-				attempt.setText(Integer.toString(jump_index));
-				mgr.registerListener(event_listener, accel, SensorManager.SENSOR_DELAY_NORMAL);
+			
 			}
 		});
 	}
@@ -151,38 +183,82 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		}
 	}
 	public void stop(){
-			
-		min = min*-1;
+					
+		//if(min <0) min = min*-1;
+		mgr.unregisterListener(this);
 		log.info("StartTime "+start_time);
 		log.info("StopTime "+stop_time);
 		time = (stop_time - start_time);
 		log.info("Time "+time);
-		float time1 = (float)(time);
+		double time1 = (float)(time/2);
 		time1 = time1 / 1000;
+		double Vinit = (acc * time1)*-1;
 		log.info("Time "+time1);
-		distance =  0.5 * (min * (time1 * time1));
+		log.info("Vinit "+Vinit);
+		distance =  0.5 * acc * (time1 * time1) + Vinit * time1;
 		log.info("Distance "+distance);
 		distance = distance * 100;
-		height.setText(String.format("%.2f", distance));
-		if(jump_index == 1) distance_best = distance;
+		
+		if(jump_index == 1) {
+			distance_best = distance;
+			String val = String.format("%.2f", distance);
+			height1.setText(val+" cm");
+			int at = jump_index;
+			String s1 = "Attempt "+at+ "completed, you jumped "+val+"starting attempt "+(at+1)+"in 5, 4, 3, 2, 1." ;
+			speak(s1);
+			 toneG.startTone(ToneGenerator.TONE_SUP_ERROR,1000); 
+			time = 0;
+			min = 0;
+			distance=0;
+			start_flag = false;
+			jump_flag = false;
+			start_time = 0;
+			stop_time = 0;	
+			velocity = 0;
+			mgr.registerListener(event_listener, accel, SensorManager.SENSOR_DELAY_FASTEST);
+			jump_index++;
+		}
 		else if(jump_index == 2) {
 			if(distance > distance_best) distance_best = distance;
+			String val2 = String.format("%.2f", distance);
+			height2.setText(val2+" cm");
+			int at = jump_index;
+			String s2 = "Attempt "+at+ "completed, you jumped "+val2+" starting attempt "+(at+1)+"in 5, 4, 3, 2, 1." ;
+			speak(s2);
+			toneG.startTone(ToneGenerator.TONE_SUP_ERROR,1000); 
+			time = 0;
+			min = 0;
+			distance=0;
+			start_flag = false;
+			jump_flag = false;
+			start_time = 0;
+			stop_time = 0;	
+			velocity = 0;
+			mgr.registerListener(event_listener, accel, SensorManager.SENSOR_DELAY_FASTEST);
+			jump_index++;
 		}
 		else if(jump_index == 3) {
 			save.setClickable(true);
+			String val3 = String.format("%.2f", distance);
+			height3.setText(val3+" cm");
+			int at = jump_index;
+			String s2 = "Attempt "+at+ "completed, you jumped "+val3 ;
+			speak(s2);
+			String s = "Test Finished, Save your results!!";
+		    speak(s);
 			save.setVisibility(View.VISIBLE);
 			if(distance > distance_best) distance_best = distance;
-			best.setText(String.format("%.2f", distance_best));
+			String v = String.format("%.2f", distance_best);
+			best.setText(v+" cm");
+			time = 0;
+			min = 0;
+			distance=0;
+			start_flag = false;
+			jump_flag = false;
+			start_time = 0;
+			stop_time = 0;	
+			velocity = 0;
 		}
-		
-		time = 0;
-		min = 0;
-		start_flag = false;
-		jump_flag = false;
-		start_time = 0;
-		stop_time = 0;
-		mgr.unregisterListener(this);
-		
 	}
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
@@ -196,53 +272,45 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 		log.info("In sensor changed");
 		float[] nums = event.values.clone();
 		 float y =nums[1];
+		 velocity = velocity + y;
 		 if(!start_flag) {
-			 if(y>2) start_flag =true;
+			 if(y>4) {
+				 start_flag =true;
+				 start_time = System.currentTimeMillis();
+			 } 
 		 }
-		if(start_flag){
-			if(y>min) {
-				
+		 if(start_flag){
 				if(jump_flag){
+					if(y >= 0){		
 					log.info("Jump flag set and y is: "+min);
 					stop_time = System.currentTimeMillis();
+					//min = y;
 					stop();
 				}
-				else min =y;
-			}
-			else if(y < min) {
-				start_time = System.currentTimeMillis();
-				min = y;
-				jump_flag = true;
-			}
+				}
+				else {
+					if(y< 0) jump_flag=true;
+				}
 		}
 	}
+
+
 		@Override
 		protected void onResume() {
 			// TODO Auto-generated method stub
 			super.onResume();
-			if(fname!=null) fname = fname;
 		}
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		mgr.unregisterListener(this);
-		start_flag = false;
-		jump_flag = false;
-		fname = fname;
-		user = user;
-	}
+	
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		super.onDestroy();
 		mgr.unregisterListener(this);
 		min =0;
 		start_flag = false;
 		jump_flag = false;
 		min =0;
 		tts.shutdown();
-		
+		super.onDestroy();
 	}
 
 	@Override
@@ -255,4 +323,5 @@ public class Jump extends Activity implements SensorEventListener, TextToSpeech.
 			log.info("TTS, Initilization Failed!");
 		}
 	}
+	
 }

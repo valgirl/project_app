@@ -3,20 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/usern_speed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/attempt_num"
-        android:layout_alignLeft="@+id/fst_name_speed"
-        android:layout_alignRight="@+id/fst_name_speed"
-        android:layout_alignTop="@+id/attempt_num"
-        android:background="@color/White"
-        android:paddingLeft="10dp"
-        android:textColor="@color/Black"
-        android:textSize="20sp"
-        android:width="120dp" />
-
      <TextView
          android:id="@+id/total_dist_speed"
          android:layout_width="wrap_content"
@@ -26,17 +12,9 @@
          android:layout_alignTop="@+id/attempt_view"
          android:layout_toRightOf="@+id/attempt_view"
          android:background="@color/White"
+         android:paddingLeft="10dp"
          android:textColor="@color/Black"
          android:textSize="20sp" />
-
-     <TextView
-         android:id="@+id/run_values"
-         android:layout_width="match_parent"
-         android:layout_height="5dp"
-         android:layout_alignParentLeft="true"
-         android:layout_below="@+id/attempt_num"
-         android:layout_marginTop="15dp"
-         android:background="@color/teal" />
 
      <TextView
          android:id="@+id/fst_name_speed"
@@ -53,34 +31,23 @@
          android:width="120dp" />
 
      <TextView
-         android:id="@+id/textView4"
+         android:id="@+id/steps_per_min_txt"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignRight="@+id/txt1"
-         android:layout_below="@+id/textView3"
-         android:layout_marginBottom="15dp"
+         android:layout_below="@+id/pace_txt"
+         android:layout_marginBottom="10dp"
          android:text="@string/at3"
          android:textColor="@color/White"
          android:textSize="15sp" />
 
      <TextView
-         android:id="@+id/textView1"
+         android:id="@+id/pace_txt"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_below="@+id/run_values"
-         android:layout_marginTop="15dp"
-         android:layout_toLeftOf="@+id/fst_name_speed"
-         android:text="@string/at1"
-         android:textColor="@color/White"
-         android:textSize="15sp" />
-
-     <TextView
-         android:id="@+id/textView3"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_below="@+id/textView1"
-         android:layout_marginTop="15dp"
-         android:layout_marginBottom="15dp"
+         android:layout_below="@+id/distance_run_txt"
+         android:layout_marginTop="10dp"
+         android:layout_marginBottom="10dp"
          android:layout_toLeftOf="@+id/fst_name_speed"
          android:text="@string/at2"
          android:textColor="@color/White"
@@ -90,7 +57,7 @@
          android:id="@+id/walk_values"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_below="@+id/textView4"
+         android:layout_below="@+id/steps_per_min_txt"
          android:layout_toLeftOf="@+id/fst_name_speed"
          android:text="@string/at4"
          android:textColor="@color/White"
@@ -102,7 +69,7 @@
          android:layout_height="wrap_content"
          android:layout_alignLeft="@+id/walk_values"
          android:layout_below="@+id/walk_values"
-         android:layout_marginTop="16dp"
+         android:layout_marginTop="10dp"
          android:text="@string/at5"
          android:textColor="@color/white"
          android:textSize="15sp" />
@@ -112,7 +79,7 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_below="@+id/jog_values"
-         android:layout_marginTop="14dp"
+         android:layout_marginTop="10dp"
          android:layout_toLeftOf="@+id/fst_name_speed"
          android:text="@string/at6"
          android:textColor="@color/white"
@@ -122,7 +89,7 @@
          android:id="@+id/att1_speed"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_above="@+id/textView3"
+         android:layout_above="@+id/pace_txt"
          android:layout_alignLeft="@+id/usern_speed"
          android:layout_alignRight="@+id/usern_speed"
          android:background="@color/white"
@@ -134,10 +101,10 @@
          android:id="@+id/att2_speed"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_alignBottom="@+id/textView3"
+         android:layout_alignBottom="@+id/pace_txt"
          android:layout_alignLeft="@+id/att1_speed"
          android:layout_alignRight="@+id/att1_speed"
-         android:layout_alignTop="@+id/textView3"
+         android:layout_alignTop="@+id/pace_txt"
          android:background="@color/white"
          android:paddingLeft="10dp"
          android:textColor="@color/black"
@@ -147,10 +114,10 @@
          android:id="@+id/att3_speed"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_alignBottom="@+id/textView4"
+         android:layout_alignBottom="@+id/steps_per_min_txt"
          android:layout_alignLeft="@+id/att2_speed"
          android:layout_alignRight="@+id/att2_speed"
-         android:layout_alignTop="@+id/textView4"
+         android:layout_alignTop="@+id/steps_per_min_txt"
          android:background="@color/white"
          android:paddingLeft="10dp"
          android:textColor="@color/black"
@@ -163,7 +130,7 @@
          android:layout_above="@+id/jog_values"
          android:layout_alignLeft="@+id/att3_speed"
          android:layout_alignRight="@+id/att3_speed"
-         android:layout_below="@+id/textView4"
+         android:layout_below="@+id/steps_per_min_txt"
          android:background="@color/white"
          android:paddingLeft="10dp"
          android:textColor="@color/black"
@@ -196,14 +163,63 @@
          android:textSize="15sp" />
 
      <TextView
+         android:id="@+id/step_dis"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBottom="@+id/textView1"
+         android:layout_alignLeft="@+id/total_dist_speed"
+         android:layout_alignRight="@+id/usern_speed"
+         android:layout_alignTop="@+id/textView1"
+         android:background="@color/white"
+         android:paddingLeft="10dp"
+         android:textColor="@color/black"
+         android:textSize="20sp" />
+
+     <TextView
+         android:id="@+id/textView9"
+         android:layout_width="match_parent"
+         android:layout_height="5dp"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/textView8"
+         android:layout_marginTop="14dp"
+         android:background="@color/teal" />
+
+     <TextView
+         android:id="@+id/attempt_view"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/textView9"
+         android:layout_marginLeft="28dp"
+         android:layout_marginTop="14dp"
+         android:paddingLeft="10dp"
+         android:paddingRight="10dp"
+         android:text="@string/tot_distance"
+         android:textColor="@color/White"
+         android:textSize="20sp" />
+
+     <TextView
+         android:id="@+id/usern_speed"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/attempt_num"
+         android:layout_alignBottom="@+id/attempt_num"
+         android:layout_alignLeft="@+id/fst_name_speed"
+         android:background="@color/White"
+         android:paddingLeft="10dp"
+         android:textColor="@color/Black"
+         android:textSize="20sp"
+         android:width="120dp" />
+
+     <TextView
          android:id="@+id/txt1"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignLeft="@+id/attempt_view"
          android:layout_alignParentTop="true"
-         android:layout_marginLeft="16dp"
-         android:layout_marginTop="27dp"
+         android:layout_marginLeft="18dp"
          android:paddingRight="10dp"
+         android:paddingTop="10dp"
          android:text="@string/fname"
          android:textColor="@color/white"
          android:textSize="20sp" />
@@ -214,57 +230,65 @@
          android:layout_height="wrap_content"
          android:layout_alignLeft="@+id/txt1"
          android:layout_below="@+id/txt1"
-         android:layout_marginTop="18dp"
+         android:layout_marginTop="14dp"
          android:text="@string/username"
          android:textColor="@color/White"
          android:textSize="20sp" />
 
      <TextView
-         android:id="@+id/textView9"
+         android:id="@+id/textView1"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/attempt_num"
+         android:layout_marginTop="17dp"
+         android:layout_toLeftOf="@+id/usern_speed"
+         android:text="@string/step_dist"
+         android:textColor="@color/white"
+         android:textSize="20sp" />
+
+     <TextView
+         android:id="@+id/run_values"
          android:layout_width="match_parent"
          android:layout_height="5dp"
          android:layout_alignParentLeft="true"
-         android:layout_below="@+id/textView8"
-         android:layout_marginTop="16dp"
+         android:layout_below="@+id/step_dis"
+         android:layout_marginTop="14dp"
          android:background="@color/teal" />
+
+     <TextView
+         android:id="@+id/distance_run_txt"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/pace_txt"
+         android:layout_below="@+id/run_values"
+         android:layout_marginTop="15dp"
+         android:text="@string/at1"
+         android:textColor="@color/White"
+         android:textSize="15sp" />
+
+     <Button
+         android:id="@+id/save_speed"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/start_speed"
+         android:layout_alignBottom="@+id/start_speed"
+         android:layout_alignLeft="@+id/att6_speed"
+         android:background="@color/Teal"
+         android:height="30dp"
+         android:text="@string/save"
+         android:width="70dp" />
 
      <Button
          android:id="@+id/start_speed"
          style="?android:attr/buttonStyleSmall"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_alignBaseline="@+id/save_speed"
-         android:layout_alignBottom="@+id/save_speed"
+         android:layout_below="@+id/attempt_view"
+         android:layout_marginTop="14dp"
          android:layout_toLeftOf="@+id/fst_name_speed"
          android:background="@color/Teal"
          android:height="30dp"
          android:text="@string/start"
          android:width="70dp" />
-
-     <Button
-         android:id="@+id/save_speed"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/att6_speed"
-         android:layout_below="@+id/total_dist_speed"
-         android:layout_marginTop="14dp"
-         android:background="@color/Teal"
-         android:height="30dp"
-         android:text="@string/save"
-         android:width="70dp" />
-
-     <TextView
-         android:id="@+id/attempt_view"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentLeft="true"
-         android:layout_below="@+id/textView9"
-         android:layout_marginLeft="23dp"
-         android:layout_marginTop="16dp"
-         android:paddingLeft="10dp"
-         android:paddingRight="10dp"
-         android:text="@string/tot_distance"
-         android:textColor="@color/White"
-         android:textSize="20sp" />
 
 </RelativeLayout>

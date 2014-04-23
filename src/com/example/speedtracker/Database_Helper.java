@@ -142,6 +142,8 @@ public class Database_Helper {
 						+ " split8 REAL,"
 						+ " split9 REAL,"
 						+ " split10 REAL,"
+						+ " dist REAL,"
+						+ " laps INTEGER,"
 						+ " total_time REAL,"
 						+ " personid TEXT );"); 
 				

@@ -243,7 +243,7 @@ public class Calibrate extends Activity implements OnInitListener, SensorEventLi
 	
 	private void stop() {
 		// TODO Auto-generated method stub
-		int s = step_count;
+		int s = step_count-1;
 		pw.flush();
 		pw.close();
 		if(walk){
@@ -253,12 +253,14 @@ public class Calibrate extends Activity implements OnInitListener, SensorEventLi
 			ind++;
 		}
 		else if(jog){
+			s = s-2;
 			jog_v.setText(String.valueOf(s));
 			jog_count=(float)20/s;
 			jog = false;
 			ind++;
 		}
 		else if(run){
+			s = s-3;
 			run_v.setText(String.valueOf(s));
 			run_count=(float)20/s;
 			run = false;
@@ -316,7 +318,7 @@ public class Calibrate extends Activity implements OnInitListener, SensorEventLi
 			if(y>12){
 			step_count++;			
 			step_flag=true;
-			debounce = 30;
+			debounce = 10;
 			}
 		}
 	}

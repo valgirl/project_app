@@ -53,7 +53,8 @@
 
              <intent-filter>
           <category android:name="android.intent.category.LAUNCHER"
-              android:screenOrientation="portrait" />
+              android:screenOrientation="portrait" 
+              android:keepScreenOn="true"/>
          </intent-filter>
             </activity>
             
@@ -65,14 +66,16 @@
     </activity>
     
     <activity android:name=".Jump"
-         android:screenOrientation="portrait"> 
+         android:screenOrientation="portrait"
+         android:keepScreenOn="true"> 
     <intent-filter>
           <category android:name="android.intent.category.LAUNCHER"/>
          </intent-filter>
     </activity>
     
      <activity android:name=".Speed"
-         android:screenOrientation="portrait"> 
+         android:screenOrientation="portrait"
+         android:keepScreenOn="true"> 
    		 <intent-filter>
 
           <category android:name="android.intent.category.LAUNCHER"
@@ -81,7 +84,8 @@
     </activity>
     
       <activity android:name=".Calibrate"
-         android:screenOrientation="portrait"> 
+         android:screenOrientation="portrait"
+         android:keepScreenOn="true"> 
    		 <intent-filter>
  <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -90,7 +94,8 @@
     </activity>
     
      <activity android:name=".Beep"
-         android:screenOrientation="portrait"> 
+         android:screenOrientation="portrait"
+         android:keepScreenOn="true"> 
    		 <intent-filter>
  <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

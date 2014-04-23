@@ -54,6 +54,7 @@ public class Create_User extends Activity {
 	private String in_user;
 	private String in_pass;
 	private String coach_name;
+	private boolean entered;
 	private Button ok;
 	private EditText fname;
 	private EditText lname;
@@ -79,6 +80,7 @@ public class Create_User extends Activity {
 		setContentView(R.layout.new_user);
 	    log = Logger.getLogger("create user");
 		coach_name="";	
+		entered = false;
 		coaches = new ArrayList<String>();
 		coaches.add("coaches");
 		//if(coaches.isEmpty()) coaches.add("None Available");
@@ -110,7 +112,7 @@ public class Create_User extends Activity {
 					
 		get = getIntent();
 		Bundle myBundle = get.getExtras();
-		user_Name = myBundle.getString("usern");
+		String u = myBundle.getString("usern");
 		log.info("user is "+user_Name);
 		dbh_person = Database_Helper.getInstance();
 		log = Logger.getLogger("Create User");
@@ -123,8 +125,7 @@ public class Create_User extends Activity {
 		height = (EditText)findViewById(R.id.height);
 		age = (EditText)findViewById(R.id.age);
 		add_coach = (Button)findViewById(R.id.coach_add);
-		set= (Button)findViewById(R.id.set_coach);
-		
+		user_Name = u;
 		if(user_Name.isEmpty()){
 			ok.setClickable(true);
 		}
@@ -151,26 +152,13 @@ public class Create_User extends Activity {
 				 height.setText(String.valueOf(h));
 				 user_name.setText(user_Name);
 				 fname.setText(myCursor.getString(fnameint));
+				 entered = true;
 			}
 			else{
 				
 			}
 		}
-		set.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				log.info("in set");
-				if(coach_name.contains("coaches")) Toast.makeText(Create_User.this, "You need to select a coach", Toast.LENGTH_SHORT).show();
-				else{
-					dbh_person.db.execSQL("update Person set coach = '"+coach_name+"' where username = '"+user_Name+"'");
-				
-					Toast.makeText(Create_User.this, "Coach added", Toast.LENGTH_SHORT).show();
-				}
-				//Toast.makeText(Create_User.this, "Data saved", Toast.LENGTH_SHORT).show();
-			}
-		});
+		
 		ok.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -211,11 +199,19 @@ public class Create_User extends Activity {
 					init.put("height", in_height);
 					init.put("age", in_age);
 					init.put("coach", coach_name);
+					user_Name = in_user;
 					//check if username already exists
 					Cursor myCursor = dbh_person.db.rawQuery("select * from Person where username = '"+in_user+"'",null);
 				    if(myCursor.getCount() > 0){
-				    	 setResult(Activity.RESULT_FIRST_USER, get);
-				    	 finish();
+				    	if(entered){
+				    		dbh_person.db.execSQL("update Person set weight = '"+in_weight+"', height = '"+in_height+"', age = '"+in_age+"' , coach = '"+coach_name+"' where username = '"+user_Name+"'");
+				    		Toast.makeText(Create_User.this, "Updated", Toast.LENGTH_LONG).show();
+				    		finish();
+				    	}
+				    	else{
+				    		setResult(Activity.RESULT_FIRST_USER, get);
+				    		finish();
+				    	}
 				    }
 				    else{//insert person into dataase
 						dbh_person.db.insert("Person", null, init);
@@ -236,13 +232,13 @@ public class Create_User extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				log.info("In add coach");
-				if(user_Name.isEmpty()){
-					Toast.makeText(Create_User.this, "You must be logged in to add coach", Toast.LENGTH_LONG).show();
-				}
-				else{
+				//if(user_Name.isEmpty()){
+				////	Toast.makeText(Create_User.this, "You must be logged in to add coach", Toast.LENGTH_LONG).show();
+				//}
+				//else{
 
 					new Download().execute("fetch");
-					}
+				//	}
 			}						
 		});
 	}

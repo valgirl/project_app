@@ -37,30 +37,32 @@
 				
 				<!--  calibrate strings -->
 				
-				<string name="walk">Walk:</string>
-				<string name="jog">Jog:</string>
-				<string name="run">Run:</string>
-				<string name="stop">Stop</string>
-				<string name="info">To calibrate the app you must set out a lane of 20m and complete it at different speeds(Walk, Jog, Run). 
-				     When your ready press the relevant button, you will be alerted
-				    when the test will begin. When you reach the end of the lane you must press stop. Repeat for the 3 
-				    speeds.</string>	
-				
+	<string name="walk">Walk:</string>
+	<string name="jog">Jog:</string>
+	<string name="run">Run:</string>
+	<string name="stop">Stop</string>
+	<string name="info">To calibrate the app you must set out a lane of 20m and complete it at different speeds(Walk, Jog, Run). 
+	     When your ready press the relevant button, you will be alerted
+	    when the test will begin. When you reach the end of the lane you must press stop. Repeat for the 3 
+	    speeds.</string>	
+	
 				
 				<!--  jump strings -->
 				
-	<string name="att">Attempt:</string>
+	<string name="attem1">Attempt 1:</string>
+	<string name="attem2">Attempt 2:</string>
+	<string name="attem3">Attempt 3:</string>
 	<string name="start">Start</string>
 	<string name="height">Height(cm):</string>
 	<string name="time">Time(ms):</string>
-	<string name="jump_instructions">Press start and jump as high as you can. The best of three
-    attempts is recorded.</string>
+	<string name="jump_instructions">Wait for the beep before you jump!</string>
    <string name="best">Best Jump: </string>
       
             
             		<!--  speed strings -->
             
     <string name="tot_distance">Total Distance(m):</string>
+    <string name="step_dist">Step Distance(m):</string>
     <string name="at1">Attempt 1 (m):</string>
 	<string name="at2">Attempt 2 (m):</string>
 	<string name="at3">Attempt 3 (m):</string>
@@ -70,7 +72,11 @@
     
      			 <!--  run strings -->
      			 
-        	<string name="rec">Record</string>
+   	<string name="rec">Record</string>
+   	<string name="dist">Distance:</string>
+   	<string name="pace">Pace-km/h:</string>
+   	<string name="steps">Steps/min:</string>
+   	<string name="tim">Time-hh:mm:ss</string>
         	
 		         <!--  beep strings -->
 		         
@@ -85,20 +91,21 @@
 		<string name="split9">Split 9:</string>
 		<string name="split10">Split 10:</string>
 		<string name="totaltime">Total Time:</string>
-		<string name="attempts">No of Laps\n (Less than 10):</string>
+		<string name="attempts">    No of Splits\n (Less than 10):</string>
+		<string name="dist2">Distance per \n   split (m):</string>
 		  
                 <!--  help documents -->
                 
                 	<!--  title strings-->
                 	
        	<string name="run_test"><![CDATA[<b><u>Run</u></b>]]></string>
-       	<string name="beep_test"><![CDATA[<b><u>Beep Test</u></b>]]></string>
+       	<string name="beep_test"><![CDATA[<b><u>Sprint Test</u></b>]]></string>
        	<string name="sprint_test"><![CDATA[<b><u>150s Test</u></b>]]></string>
        	<string name="power_test"><![CDATA[<b><u>Power Test</u></b>]]></string>
                 	 	
 					<!--  main -->
-	<string name="help_main">Welcome to sportstracker. This app is designed to help you monitor your progress after each training session.
-	    Please log onto <![CDATA[<b><u>www.sportstracker.com</u></b>]]> to view all your results. <![CDATA[<br>]]>  For information on each test please navigate through the pages.\n  
+	<string name="help_main">Welcome to fitness tester. This app is designed to help you monitor your progress after each fitness test.
+	    Please log onto <![CDATA[<b><u>www.fitnesstester.com</u></b>]]> to view all your results. <![CDATA[<br>]]>  For information on each test please navigate through the pages.\n  
 	    <![CDATA[<br>]]>Enjoy your training! </string>
 	 
 	<string name="help">Help</string>
@@ -108,16 +115,16 @@
              to just above your ankle. (An armband is a good way) Press start and the test will begin. When
               3 jumps are done you will be able to save you best jump.</string>
               
-          <string name="run_help">Press start to start recording. When you are finished press save
-              and your route will be saved to the database</string>
+          <string name="run_help">Press start to start recording. When you are finished press stop
+              and your distnace, pace time and steps per minute will be displayed and saved to the database</string>
                       
           <string name="speed_help">Layout a 25 metre lane with a cone at 5 metre intervals. When you are prompted run to the first cone, back to the start,
                       run to the second cone, back to the start and so on until the timer sounds. If each interval is completed they will have run a total distance of 150 metres.
-                       The goal is to complete all intervals in 30 seconds.</string>
+                       There is a total of 6 intervals with a 30 second rest in between.</string>
          
           <string name="beep_help">Set a lane with whatever distance you require. Press the start button. A pop up box will appear
-              asking you how many laps you want to do. e.g.100m lane by 10 laps is a total of 1km.
-              Press start when finished.The app will recored your time for each lap and display it when you finish.
+              asking you how many laps and what distnace you want to do. e.g.100m lane by 10 laps is a total of 1km.
+              Press start when finished.The app will record your time for each lap and display it when you finish.
               A button will then pop up to save your data.</string>
                       
           <string name="sync_help">To upload all your information to the website you must press the sync button. You must have an internet connection to do this.

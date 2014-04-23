@@ -92,8 +92,10 @@ public class Main_Activity extends Activity  {
 		if (myprefs != null && 
 				myprefs.contains("userN")) { 
 				//object and key found, show all saved values 
-				person_name = myprefs.getString("name", ""); 
-				userName = myprefs.getString("userN", "");
+				String p = myprefs.getString("name", ""); 
+				String u = myprefs.getString("userN", "");
+				 userName = u;
+				 person_name = p;
 				if(!userName.isEmpty()){
 					login.setClickable(false);
 	                login.setBackgroundColor(Color.GRAY);
@@ -245,6 +247,7 @@ public class Main_Activity extends Activity  {
 			                        sync.setClickable(true);
 			                        sync.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
 			                        userName = inuserName;
+			                        log.info("user is: "+userName);
 			                        dialog.dismiss();
 			                    }
 							  else
@@ -277,11 +280,12 @@ public class Main_Activity extends Activity  {
 		// TODO Auto-generated method stub
 				Intent inten = new Intent(Main_Activity.this, Create_User.class);
 				Bundle myBundle = new Bundle();
-				log.info("in create coach user is: "+coach_user);
+				String u =userName;
+				log.info("in create coach user is: "+u);
 				if(coach_user.isEmpty()) {
 					coach_user="";
 				}
-				myBundle.putString("usern", coach_user);
+				myBundle.putString("usern", u);
 				inten.putExtras(myBundle);
 				startActivityForResult(inten, 234);
 				}
@@ -371,8 +375,9 @@ public class Main_Activity extends Activity  {
 	                sync.setClickable(true);
 	                 sync.setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
 				//person_name = received.getString("name");
-				coach_user = received.getString("user");
-				log.info("person name is: "+coach_user);
+				String u = received.getString("user");
+				userName = u;
+				log.info("person name is: "+userName);
 					
 			
 				// }
@@ -395,6 +400,8 @@ public class Main_Activity extends Activity  {
 		int timecol = myCursor.getColumnIndex("Timestamp");
 		int datacol = myCursor.getColumnIndex("data");
 		int run_timecol = myCursor.getColumnIndex("run_time");
+		int pace_col = myCursor.getColumnIndex("pace");
+		int steps_col = myCursor.getColumnIndex("steps");
 		int count = myCursor.getCount();
 		JSONArray jsa = new JSONArray();
 		if(myCursor.getCount() > 0){
@@ -403,13 +410,17 @@ public class Main_Activity extends Activity  {
 		
 		for (int i = 0; i < count; i++) {
 			
-			float run_times = myCursor.getFloat(run_timecol);
+			String run_times = myCursor.getString(run_timecol);
 			Timestamp ts = Timestamp.valueOf(myCursor.getString(timecol));
 			double data_info = myCursor.getDouble(datacol);
+			float pace_val = myCursor.getFloat(pace_col);
+			float steps_val = myCursor.getFloat(steps_col);
 			JSONObject js = new JSONObject();
 			try {
 				js.put("timestamp", ts);
 				js.put("data", data_info);
+				js.put("pace", pace_val);
+				js.put("steps", steps_val);
 				js.put("run_time", run_times);
 				js.put("id", recid);
 				jsa.put(i, js);
@@ -470,6 +481,8 @@ public class Main_Activity extends Activity  {
 		int sp8col = myCursor.getColumnIndex("split8");
 		int sp9col = myCursor.getColumnIndex("split9");
 		int sp10col = myCursor.getColumnIndex("split10");
+		int distcol = myCursor.getColumnIndex("dist");
+		int lapscol = myCursor.getColumnIndex("laps");
 		int totcol = myCursor.getColumnIndex("total_time");
 		int count = myCursor.getCount();
 		JSONArray jsa = new JSONArray();
@@ -491,6 +504,8 @@ public class Main_Activity extends Activity  {
 			float spl9 = myCursor.getFloat(sp9col);
 			float spl10 = myCursor.getFloat(sp10col);
 			float tot_time = myCursor.getFloat(totcol);
+			int lap_count = myCursor.getInt(lapscol);
+			float dist_val = myCursor.getFloat(distcol);
 			JSONObject js = new JSONObject();
 			try {
 				js.put("timestamp", ts);
@@ -505,6 +520,8 @@ public class Main_Activity extends Activity  {
 				js.put("split8", spl8);
 				js.put("split9", spl9);
 				js.put("split10", spl10);
+				js.put("distance", dist_val);
+				js.put("laps", lap_count);
 				js.put("total_time", tot_time);
 				jsa.put(i, js);
 				myCursor.moveToNext();
@@ -520,7 +537,53 @@ public class Main_Activity extends Activity  {
 	}
 	private String get_SpeedData(){
 		
-		return MYPREFS;
+		myCursor = dbh.db.rawQuery("select * from Speed where personid = '"+recid+"'",null);
+		System.out.println("personid is: "+recid);
+		int timecol = myCursor.getColumnIndex("Timestamp");
+		int sp1col = myCursor.getColumnIndex("distance1");
+		int sp2col = myCursor.getColumnIndex("distance2");
+		int sp3col = myCursor.getColumnIndex("distance3");
+		int sp4col = myCursor.getColumnIndex("distance4");
+		int sp5col = myCursor.getColumnIndex("distance5");
+		int sp6col = myCursor.getColumnIndex("distance6");
+		int sp7col = myCursor.getColumnIndex("distance_total");
+
+		int count = myCursor.getCount();
+		JSONArray jsa = new JSONArray();
+		if(myCursor.getCount() > 0){
+			myCursor.moveToFirst();
+		}
+		
+		for (int i = 0; i < count; i++) {
+
+			Timestamp ts = Timestamp.valueOf(myCursor.getString(timecol));
+			float spl1 = myCursor.getFloat(sp1col);
+			float spl2 = myCursor.getFloat(sp2col);
+			float spl3 = myCursor.getFloat(sp3col);
+			float spl4 = myCursor.getFloat(sp4col);
+			float spl5 = myCursor.getFloat(sp5col);
+			float spl6 = myCursor.getFloat(sp6col);
+			float dis_tot = myCursor.getFloat(sp7col);
+			JSONObject js = new JSONObject();
+			try {
+				js.put("timestamp", ts);
+				js.put("id", recid);
+				js.put("distance1", spl1);
+				js.put("distance2", spl2);
+				js.put("distance3", spl3);
+				js.put("distance4", spl4);
+				js.put("distance5", spl5);
+				js.put("distance6", spl6);
+				js.put("distance_total", dis_tot);
+				jsa.put(i, js);
+				myCursor.moveToNext();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				log.info("Json exception "+e.getMessage());
+			}	
+		}	
+		return jsa.toString();
 		
 	}
 	private String get_UserData(){
@@ -586,17 +649,7 @@ public class Main_Activity extends Activity  {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		if (myprefs != null && 
-				myprefs.contains("userN")) { 
-				//object and key found, show all saved values 
-				person_name = myprefs.getString("name", ""); 
-				userName = myprefs.getString("userN", "");
-		} 
-		else 
-		{ 
-			//person_name = "";
-			userName=""; 
-		}
+
 	}
 	@Override
 	protected void onDestroy() {
@@ -636,7 +689,8 @@ public class Main_Activity extends Activity  {
 	 	 String jump = get_JumpData();
 	 	 String beep = get_BeepData();
 	 	 String run = get_RunData();
-		 log.info("In connection " +beep);
+	 	 String speed = get_SpeedData();
+		 log.info("In connection " +speed);
 		String url = "http://SERVER/sync_sql.php";
 		StringBuffer sb = new StringBuffer();
 		DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -651,6 +705,7 @@ public class Main_Activity extends Activity  {
 			params.add(new BasicNameValuePair("jump_data", jump));
 			params.add(new BasicNameValuePair("run_data", run));
 			params.add(new BasicNameValuePair("beep_data", beep));
+			params.add(new BasicNameValuePair("sprint_data", speed));
 				httppost.setEntity(new UrlEncodedFormEntity(params));
 				response = httpclient.execute(httppost);
 				log.info("Sent String ");

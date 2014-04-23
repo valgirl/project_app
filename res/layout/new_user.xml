@@ -168,39 +168,27 @@
         android:layout_below="@+id/weight" />
 
     <Button
-        android:id="@+id/coach_add"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/coach_spinner"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="27dp"
-        android:height="40dp"
-        android:text="@string/add_coach"
-        android:width="90dp" />
-
-    <Button
-        android:id="@+id/set_coach"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/coach_add"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_vertical|center_horizontal"
-        android:height="40dp"
-        android:text="@string/set"
-        android:width="90dp" />
-
-    <Button
         android:id="@+id/new_user_login"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="80dp"
         android:layout_height="40dp"
-        android:layout_alignBottom="@+id/set_coach"
-        android:layout_alignTop="@+id/set_coach"
-        android:layout_toLeftOf="@+id/fst_name_speed"
+        android:layout_alignBaseline="@+id/coach_add"
+        android:layout_alignBottom="@+id/coach_add"
+        android:layout_toLeftOf="@+id/coach_spinner"
         android:text="@string/create_user"
         android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/coach_add"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/coach_spinner"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="29dp"
+        android:layout_marginLeft="30dp"
+        android:height="40dp"
+        android:text="@string/add_coach"
+        android:width="90dp" />
 
 </RelativeLayout>

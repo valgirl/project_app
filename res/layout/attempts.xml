@@ -3,18 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <EditText
-        android:id="@+id/attempt_num"
+    <TextView
+        android:id="@+id/distance_run_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_marginLeft="14dp"
-        android:layout_toRightOf="@+id/textView1"
-        android:background="@color/white"
-        android:height="30dp"
-        android:inputType="numberDecimal|phone"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="17dp"
         android:paddingLeft="10dp"
-        android:width="100dp" />
+        android:text="@string/attempts"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/attempt_num_enter"
@@ -22,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp"
+        android:layout_marginTop="19dp"
         android:background="@color/Teal"
         android:height="30dp"
         android:text="@string/enter"
@@ -33,11 +32,36 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="17dp"
-        android:text="@string/attempts"
+        android:layout_below="@+id/distance_run_txt"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="10dp"
+        android:text="@string/dist2"
         android:textColor="@color/white"
         android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/laps_in_nums"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/attempt_num_enter"
+        android:layout_alignLeft="@+id/in_attempt"
+        android:layout_alignRight="@+id/in_attempt"
+        android:layout_alignTop="@+id/textView1"
+        android:ems="10"
+        android:inputType="numberDecimal|phone" />
+
+    <EditText
+        android:id="@+id/in_attempt"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView1"
+        android:layout_alignTop="@+id/distance_run_txt"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/distance_run_txt"
+        android:ems="10"
+        android:inputType="numberDecimal|phone" >
+
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>

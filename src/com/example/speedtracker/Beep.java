@@ -18,6 +18,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -68,6 +70,7 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 	private int debounce;
 	private int debounce_time;
 	private long start_time;
+	private ToneGenerator toneG;
 	private long stop_time;
 	 private float valueAccelerometer;
 	 private float total_t;
@@ -76,6 +79,7 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 	 private int count_start_press;
 	 private int indx;
 	 private int input_attempt;
+	 private float input_distance;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +95,7 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 		log.info("Name is: "+fname);
 		user = myBundle.getString("username");
 		log.info("user is: "+user);
-		
+		 toneG = new ToneGenerator(AudioManager.STREAM_NOTIFICATION,100);
 		final File root = android.os.Environment.getExternalStorageDirectory();
 	    final File dir = new File(root.getAbsolutePath() +"/datacsv");
 	    if(dir.exists());
@@ -167,6 +171,8 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 				init.put("split8", sp8);
 				init.put("split9", sp9);
 				init.put("split10", sp10);
+				init.put("dist", input_distance);
+				init.put("laps", input_attempt);
 				init.put("total_time", tot);
 				dbh_person.db.insert("Beep", null, init);
 				Toast.makeText(Beep.this, "Data saved", Toast.LENGTH_SHORT).show();
@@ -186,9 +192,10 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 					 dialog.setContentView(R.layout.attempts);
 		            dialog.setTitle("Enter Attempt");
 		            Window window = dialog.getWindow();
-		            window.setLayout(400, 350); 
+		            window.setLayout(450, 500); 
 		           // dialog.show();
-		            final EditText n = (EditText)dialog.findViewById(R.id.attempt_num);
+		            final EditText n = (EditText)dialog.findViewById(R.id.in_attempt);
+		            final EditText d = (EditText)dialog.findViewById(R.id.laps_in_nums);
 		            Button go = (Button)dialog.findViewById(R.id.attempt_num_enter);
 		            count_start_press++;
 		            go.setOnClickListener(new View.OnClickListener() {
@@ -197,14 +204,17 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
 							String s = n.getText().toString().trim();
-							if(s!=null){
+							String s1 = d.getText().toString().trim();
+							if(s!=null && s1!= null){
 								int n = Integer.parseInt(s);
+								float di = Float.parseFloat(s1);
 								if(n>10){
 									Toast.makeText(Beep.this, "Must be less than 10", Toast.LENGTH_LONG).show();
 									count_start_press=0;
 								}
 								else{
 									input_attempt = n;
+									input_distance = di;
 									log.info("Attempt_num "+input_attempt);
 									sp1=0;
 									sp2=0;
@@ -224,7 +234,7 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 									}
 								}
 							else{
-								Toast.makeText(Beep.this, "You must enter a value", Toast.LENGTH_LONG).show();
+								Toast.makeText(Beep.this, "You must enter all values", Toast.LENGTH_LONG).show();
 								count_start_press=0;
 								dialog.dismiss();
 							}
@@ -256,10 +266,11 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 				}
 					long t = System.currentTimeMillis();
 				long t1;
-				while((t1 = System.currentTimeMillis()-t) < 2000);
-				String s = "3, 2, 1, Go!";
+				while((t1 = System.currentTimeMillis()-t) < 3000);
+				String s = "5, 4, 3, 2, 1.";
 			    speak(s);
 			    while(tts.isSpeaking());
+			    toneG.startTone(ToneGenerator.TONE_SUP_ERROR,1000); 
 			    count++;
 			    total_t=0;
 			    start_time=System.currentTimeMillis();
@@ -363,7 +374,7 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
-		//log.info("in sensor");
+		log.info("in sensor");
 		Thread t1 = null;
 	    valueAccelerometer = event.values[1];		 
 		//nums.add(valueAccelerometer);
@@ -371,19 +382,21 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 		 StringBuffer buff = new StringBuffer();
 		 buff.append(String.valueOf(valueAccelerometer));
 		 pw.println(buff.toString());
-			double rollOff = 0.5D;
+			double rollOff = 0.6D;
 			int turn=0;
 			//float num = (float)nums.elementAt(ind);
 				//System.out.println(valueAccelerometer);
 				if(valueAccelerometer < lastMax){
-					if(valueAccelerometer > 3 && debounce == 0){
+					if(valueAccelerometer > 1 && debounce == 0){
 						turn_count++;
 						stop_time=System.currentTimeMillis();
 						debounce = 200;
 						turn = turn_count;
-						long t = stop_time-start_time;
+						long s1 = stop_time;
+						long s2 = start_time;
+						long t = s1-s2;
 						float t2 = (float) t/1000;
-						debounce_time=30;
+						//debounce_time=30;
 						t1 = new Thread(new check_turn(turn,t2));
 					t1.start();
 					start_time = System.currentTimeMillis();
@@ -391,12 +404,10 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 					else{
 						if(debounce > 0) debounce--;
 					}
-					if(debounce_time>0) debounce_time--;
 					lastMax = valueAccelerometer;
 				}
 				else{
 					lastMax = lastMax+rollOff;
-					if(debounce_time>0) debounce_time--;
 					if(debounce > 0){
 						debounce--;
 					}
@@ -427,10 +438,11 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 		split8.setText(String.valueOf(sp8));
 		split9.setText(String.valueOf(sp9));
 		split10.setText(String.valueOf(sp10));
-		String s = "Test finished!";
+		 toneG.startTone(ToneGenerator.TONE_SUP_ERROR,1000); 
+		 String s = "Test finished!";
 	    speak(s);
-	    float tot1 = total_t;
-		String s1 = String.format("%.2f", tot1);
+	    tot = total_t;
+		String s1 = String.format("%.2f", tot);
 		total_time.setText(s1);
 		turn_count = 0;
 		lastMax = -2.0D;
@@ -444,14 +456,15 @@ public class Beep extends Activity implements  SensorEventListener, TextToSpeech
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		super.onPause();
+		tts.shutdown();
 		mgr.unregisterListener(event_listener);
+		super.onPause();
 	}
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		super.onDestroy();
 		mgr.unregisterListener(event_listener);
 		tts.shutdown();
+		super.onDestroy();
 	}
 }

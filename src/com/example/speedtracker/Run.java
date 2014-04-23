@@ -6,7 +6,9 @@ import java.util.logging.Logger;
 
 import com.google.android.gms.*;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.*;
 
 import android.app.AlertDialog;
@@ -34,13 +36,14 @@ import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import android.view.*;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 
-public class Run extends FragmentActivity implements android.location.LocationListener, SensorEventListener,OnInitListener{
+public class Run extends FragmentActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, android.location.LocationListener, SensorEventListener,OnInitListener{
 
 	Logger log = Logger.getLogger("run");
 	private TextToSpeech tts;
@@ -49,6 +52,10 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 	private android.location.LocationListener ll;
 	private Location lastloc;
 	private Button record;
+	private TextView time_txt;
+	private TextView pace_txt;
+	private TextView steps_txt;
+	private TextView dist_txt;
 	private int distance_total;
 	private double time;//second
 	private long time1;
@@ -62,6 +69,7 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 	private String fname;
 	private String user;
 	private String recid ;
+	private LocationClient lc;
 	 DecimalFormat df;
 	 LatLng myPosition;
 	//private int count=0;
@@ -102,7 +110,10 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 		else{
 			Toast.makeText(Run.this, "No input in database!", Toast.LENGTH_SHORT).show();
 		}
-		
+		time_txt = (TextView)findViewById(R.id.time_txt_run);
+		pace_txt = (TextView)findViewById(R.id.pace_txt);
+		steps_txt = (TextView)findViewById(R.id.steps_per_min_txt);
+		dist_txt = (TextView)findViewById(R.id.distance_run_txt);
 		Date cuurrentDate = new Date();
 		String s1 = java.text.DateFormat.getDateTimeInstance().format(cuurrentDate);
 		log.info(s1);
@@ -115,15 +126,17 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 		st = false;
 		record = (Button)findViewById(R.id.rec);
 		map_view =  ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-		
+		lc = new LocationClient(getApplicationContext(), this, this);
+		lc.connect();
 		map_view.getUiSettings().setMyLocationButtonEnabled(false);
 		map_view.setMyLocationEnabled(true);
+		
 		 lastloc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		 if(lastloc!=null){
 			 myPosition= new LatLng(lastloc.getLatitude(),
 		                lastloc.getLongitude());
 		    
-		 map_view.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition,10));
+		 map_view.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition,15));
 		 }
 		 if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 	            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, scan_time, 0,ll );
@@ -131,7 +144,7 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 			else{
 				displayPromptForEnablingGPS();		
 			}
-		
+		// map_view.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition,5));
 		record.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -149,7 +162,8 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 					log.info(Double.toString(distance_total));		
 					time1 = (stop_time - start_time);
 					//get minutes
-					float mins = time1/1000; 
+					float sec = (float) time1/1000; 
+					float mins = sec/60;
 					int steps_per_min = (int)( c/mins);
 					//get seconds
 					int seconds = (int) (time1 / 1000) % 60 ;
@@ -157,16 +171,25 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 					int hours   = (int) ((time1 / (1000*60*60)) % 24);
 					float dis = (float)distance_total;
 					float dist = dis/1000;
-					float av_pace = time1/dist;
+					float av_p = dist/mins;
+					float av_pace = av_p * 60;
 					String d = Float.toString(dist);
+					String tim = String.format("%d:%d:%d",hours,minutes,seconds);
+					String pace =Float.toString(av_pace);
+					String stps = Integer.toString(steps_per_min);
+
+					time_txt.setText(tim);
+					pace_txt.setText(pace);
+					steps_txt.setText(stps);
+					dist_txt.setText(d);
 					ContentValues init = new ContentValues();
 			    	init.put("personid", recid);
-					init.put("run_time", String.format("%d %d %d",hours,minutes,seconds));
+					init.put("run_time", tim);
 			    	init.put("data",dist);
 			    	init.put("pace", av_pace);
 			    	init.put("steps",steps_per_min);
 					dbh_person.db.insert("Run", null, init);
-					Toast.makeText(Run.this, "Route saved "+String.format("%.2f",dist)+"(km) Time: "+String.format("%d:%d:%d",hours,minutes,seconds+"steps per min "+String.format("%d", steps_per_min)+ "Pace: "+String.format("%.2f",av_pace)), Toast.LENGTH_LONG).show();
+					Toast.makeText(Run.this, "Route saved "+d+"(km) Time: "+tim+"steps per min "+stps+ "Pace: "+pace, Toast.LENGTH_LONG).show();
 		 			//dbh.db.execSQL("update Run set run = '"+sb+"' where username = '"+user+"'");
 					distance_total =0;
 					//st = false;
@@ -301,15 +324,27 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 			
 		}*/
 		@Override
+		protected void onDestroy() {
+			// TODO Auto-generated method stub
+			lm.removeUpdates(this);
+			lc.disconnect();
+			tts.shutdown();
+			super.onDestroy();
+		}
+		@Override
 		protected void onPause() {
 			// TODO Auto-generated method stub
 			lm.removeUpdates(this);
+			lc.disconnect();
+			tts.shutdown();
 			super.onPause();
 		}
 		@Override
 		protected void onStop() {
 			// TODO Auto-generated method stub
 			lm.removeUpdates(this);
+			lc.disconnect();
+			tts.shutdown();
 			super.onStop();
 		}
 		public void speak(String message){
@@ -388,7 +423,7 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 		float y = event.values[1];
 		if(step_flag){
 			if(debounce ==0){
-				if(y<6){
+				if(y<8){
 				step_flag=false;
 				}
 			}
@@ -403,5 +438,24 @@ public class Run extends FragmentActivity implements android.location.LocationLi
 			debounce = 30;
 			}
 		}
+	}
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onConnected(Bundle arg0) {
+		// TODO Auto-generated method stub
+		Location l = lc.getLastLocation();
+		if(l != null){
+				LatLng lal = new LatLng(l.getLatitude(),l.getLongitude());
+				map_view.animateCamera(CameraUpdateFactory.newLatLngZoom(lal, 15));
+		}
+	}
+	@Override
+	public void onDisconnected() {
+		// TODO Auto-generated method stub
+		
 	}
 }
